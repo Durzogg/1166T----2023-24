@@ -27,26 +27,7 @@ void initialize() {
 	pros::lcd::set_text(1, "Hello PROS User!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	
-	pros::Motor frontLeft(1);
-	pros::Motor frontRight(2);
-
-	pros::Motor backLeft(3); // I don't know if this is correct, will check next time the robot is tested
-	pros::Motor backRight(4);
-
-	pros::Motor leftFlywheel(5);
-	pros::Motor rightFlywheel(6);
-
-	pros::Motor leftIntake(11); // I also don't know if this is correct, will check next time the robot is tested
-	pros::Motor rightIntake(12);
-
-	pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
-	pros::Motor_Group intakeMotors({leftIntake, rightIntake});
-
-	pros::ADIDigitalOut elevationPiston(); // whatever port we are using for the elevation pneumatic
-	pros::ADIDigitalOut leftPlowPiston(); // whatever port we are using for the left plow piston
-	pros::ADIDigitalOut rightPlowPiston(); // whatever port we are using for the right plow piston
 
 }
 
@@ -99,13 +80,29 @@ void autonomous() {}
  */
 void opcontrol() {
 
-	while(true){
-		
-		pros::delay(5);
-	}
-}
+	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	
-	/*
+	pros::Motor frontLeft(1);
+	pros::Motor frontRight(2);
+
+	pros::Motor backLeft(3); // I don't know if this is correct, will check next time the robot is tested
+	pros::Motor backRight(4);
+
+	pros::Motor leftFlywheel(5);
+	pros::Motor rightFlywheel(6);
+
+	pros::Motor leftIntake(11); // I also don't know if this is correct, will check next time the robot is tested
+	pros::Motor rightIntake(12);
+
+	pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
+	pros::Motor_Group intakeMotors({leftIntake, rightIntake});
+
+	pros::ADIDigitalOut elevationPiston(99); // whatever port we are using for the elevation pneumatic
+	pros::ADIDigitalOut rightClownPiston(99); // whatever port we are using for the left plow piston
+	pros::ADIDigitalOut wrongClownPiston(99); // whatever port we are using for the right plow piston
+
+	
+	
   int pnue = 1;
 
   int drvtrFB = 1;
@@ -116,52 +113,33 @@ void opcontrol() {
   int flywheelOff = 1;
   bool flyWheelOn = false;
   
-  frontRight.setMaxTorque(100,percent);
-  backRight.setMaxTorque(100,percent);
-  frontLeft.setMaxTorque(100,percent);
-  backLeft.setMaxTorque(100,percent);
 
   // Start of Elevation Code
-  while (1) {
+  while (1==1) {
     drvtrFB = 1;
     drvtrLR = 1;
     // Checks for button pressing and if the Fixed Pneumatic code hasn't been
     // activated
-    if ((Controller1.ButtonR1.pressing() == true) && (pnue != 2)) {
-      elePnu.set(true);
-      Controller1.Screen.print("ElevationPnu = true");
-      Controller1.Screen.newLine();
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) == true) && (pnue != 2)) {
+      elevationPiston.set_value(true);
       elevationOff = 0;
     }  else if(pnue == 1){
-      elePnu.set(false);
+      elevationPiston.set_value(false);
       if (elevationOff == 0) {
-        Controller1.Screen.print("ElevationPnu = false");
-        Controller1.Screen.newLine();
+        
+        
         elevationOff = 1;
       }
     }
     // Checks for B button being pressed and lockes the code to keep the
     // pneumatic fixed in place
-    if ((Controller1.ButtonR2.pressing() == true) || (pnue == 2)) {
-      elePnu.set(true);
-      Controller1.Screen.print("ElevationPnu = Fixed");
-      Controller1.Screen.newLine();
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) == true) || (pnue == 2)) {
+      elevationPiston.set_value(true);
       pnue = 2;
     }
 
-    if ((abs(Controller1.Axis3.position(percent))>drvtrDZ) || (abs(Controller1.Axis1.position(percent))>drvtrDZ)){
-
-      speedRightSide(1.2*(Controller1.Axis3.position(percent)-(Controller1.Axis1.position(percent))));
-      speedLeftSide(1.2*(Controller1.Axis3.position(percent)+(Controller1.Axis1.position(percent))));
-
-      spinRightSide();
-      spinLeftSide();
-    }else{
-      cease();
-    }
-
-
-    wait(0.1,sec);
+  
+  
 
   
 
@@ -169,26 +147,19 @@ void opcontrol() {
 
 
     // start of intake code
-    intakeVelocity(100);
-    if ((Controller1.ButtonRight.pressing() == true)) {
-      Intake_Motors.spin(forward);
-      Controller1.Screen.print("Intake_Motors = on");
-      Controller1.Screen.newLine();
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true)) {
+      intakeMotors.move(127);
       intakeOff = 0;
     }
-
-    else if ((Controller1.ButtonLeft.pressing() == true)) {
-      Intake_Motors.spin(reverse);
-      Controller1.Screen.print("Intake_Motors = on");
-      Controller1.Screen.newLine();
+  
+    else if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) == true)) {
+      intakeMotors.move(-127);
       intakeOff = 0;
     }
 
     else {
-      Intake_Motors.stop();
+      intakeMotors.brake();
       if (intakeOff == 0) {
-        Controller1.Screen.print("Intake_Motors = off");
-        Controller1.Screen.newLine();
         intakeOff = 1;
       }   
     }
@@ -196,48 +167,49 @@ void opcontrol() {
     // end of intake code
 
     // start of flywheel code
-    if ((Controller1.ButtonX.pressing() == true)) {
-      flyWheelMotors.setVelocity(100,percent);
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_X) == true)) {
+      flywheelMotors.move_velocity(100);
       flyWheelOn = true;
     }
 
-    if ((Controller1.ButtonY.pressing() == true)) {
-      flyWheelMotors.setVelocity(40,percent);
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_Y) == true)) {
+      flywheelMotors.move_velocity(40);
       flyWheelOn = true;
     }
 
-    if ((Controller1.ButtonB.pressing() == true)) {
-      flyWheelMotors.setVelocity(60,percent);
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_B) == true)) {
+      flywheelMotors.move_velocity(60);
       flyWheelOn = true;
     }
 
-    if ((Controller1.ButtonA.pressing() == true)) {
-      flyWheelMotors.setVelocity(80,percent);
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == true)) {
+      flywheelMotors.move_velocity(80);
       flyWheelOn = true;
     }
 
-    if ((Controller1.ButtonB.pressing() == true)) {
-      flyWheelMotors.setVelocity(60,percent);
-      flyWheelOn = true;
-    }
-
-    if ((Controller1.ButtonDown.pressing() == true)) {
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) == true)) {
       flyWheelOn = false;
 
     }
     if (flyWheelOn == true) {
-       flyWheelMotors.spin();
-       Controller1.Screen.print("flyWheelMotors = on");
-       Controller1.Screen.newLine();
+       flywheelMotors.move(127);
        flywheelOff = 0;
     }
     if (flyWheelOn == false) {
-      flyWheelMotors.stop();
-      Controller1.Screen.print("flyWheelMotors = off");
-      Controller1.Screen.newLine();
+      flywheelMotors.brake();
       flywheelOff = 1;
       
     }
+
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == true ){
+      rightClownPiston.set_value(true);
+      wrongClownPiston.set_value(true);
+    }
+    else {
+      rightClownPiston.set_value(false);
+      wrongClownPiston.set_value(false);
+    }
    // end of flywheel code
   }
-*/
+
+}
