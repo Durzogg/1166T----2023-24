@@ -49,7 +49,9 @@ void disabled() {
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+
+}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -62,7 +64,9 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+  
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -83,47 +87,43 @@ void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	
 	pros::Motor frontLeft(1);
-	pros::Motor frontRight(2);
+	pros::Motor frontRight(3);
 
-	pros::Motor backLeft(3); // I don't know if this is correct, will check next time the robot is tested
-	pros::Motor backRight(4);
+	pros::Motor backLeft(4); // I don't know if this is correct, will check next time the robot is tested
+	pros::Motor backRight(2);
 
-	pros::Motor leftFlywheel(5);
+	pros::Motor leftFlywheel(5, 1);
 	pros::Motor rightFlywheel(6);
 
-	pros::Motor leftIntake(11); // I also don't know if this is correct, will check next time the robot is tested
+	pros::Motor leftIntake(11, 1); // I also don't know if this is correct, will check next time the robot is tested
 	pros::Motor rightIntake(12);
 
 	pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
 	pros::Motor_Group intakeMotors({leftIntake, rightIntake});
 
-	pros::ADIDigitalOut elevationPiston(99); // whatever port we are using for the elevation pneumatic
-	pros::ADIDigitalOut rightClownPiston(99); // whatever port we are using for the left plow piston
-	pros::ADIDigitalOut wrongClownPiston(99); // whatever port we are using for the right plow piston
+	pros::ADIDigitalOut elevationPiston('E'); // whatever port we are using for the elevation pneumatic
+	pros::ADIDigitalOut rightClownPiston('A'); // whatever port we are using for the left plow piston
+	pros::ADIDigitalOut wrongClownPiston('H');// whatever port we are using for the right plow piston
 
 	
 	
-  int pnue = 1;
-
-  int drvtrFB = 1;
-  int drvtrLR = 1;
-  int drvtrDZ = 10;
+  int elevationOn = 1;
   int elevationOff = 1;
+  int plow = 1;
   int intakeOff = 1;
   int flywheelOff = 1;
   bool flyWheelOn = false;
   
 
-  // Start of Elevation Code
   while (1==1) {
-    drvtrFB = 1;
-    drvtrLR = 1;
+    // Elevation Code
+
     // Checks for button pressing and if the Fixed Pneumatic code hasn't been
     // activated
-    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) == true) && (pnue != 2)) {
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) == true) && (elevationOn != 2)) {
       elevationPiston.set_value(true);
       elevationOff = 0;
-    }  else if(pnue == 1){
+    }  else if(elevationOn == 1){
       elevationPiston.set_value(false);
       if (elevationOff == 0) {
         
@@ -133,20 +133,13 @@ void opcontrol() {
     }
     // Checks for B button being pressed and lockes the code to keep the
     // pneumatic fixed in place
-    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) == true) || (pnue == 2)) {
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) == true) || (elevationOn == 2)) {
       elevationPiston.set_value(true);
-      pnue = 2;
+      elevationOn = 2;
     }
 
-  
-  
 
-  
-
-//clockwise decending
-
-
-    // start of intake code
+  // Intake Code
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true)) {
       intakeMotors.move(127);
       intakeOff = 0;
@@ -164,9 +157,8 @@ void opcontrol() {
       }   
     }
 
-    // end of intake code
 
-    // start of flywheel code
+  // Flywheel Code
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_X) == true)) {
       flywheelMotors.move_velocity(100);
       flyWheelOn = true;
@@ -200,16 +192,19 @@ void opcontrol() {
       flywheelOff = 1;
       
     }
-
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == true ){
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == true)&&(plow == 1)) {
       rightClownPiston.set_value(true);
       wrongClownPiston.set_value(true);
-    }
-    else {
+      plow = 0;
+      
+    }  
+    if((master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == false)&& (plow == 0)){
       rightClownPiston.set_value(false);
       wrongClownPiston.set_value(false);
-    }
-   // end of flywheel code
-  }
+      plow = 1;
 
+    //lv_indev_wait_release
+    }
+  }
+  
 }
