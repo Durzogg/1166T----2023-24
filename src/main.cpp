@@ -93,10 +93,10 @@ void opcontrol() {
 	pros::Motor backRight(2);
 
 	pros::Motor leftFlywheel(5, 1);
-	pros::Motor rightFlywheel(6);
+	pros::Motor rightFlywheel(6, 0);
 
 	pros::Motor leftIntake(11, 1); // I also don't know if this is correct, will check next time the robot is tested
-	pros::Motor rightIntake(12);
+	pros::Motor rightIntake(12, 0);
 
 	pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
 	pros::Motor_Group intakeMotors({leftIntake, rightIntake});
@@ -183,28 +183,30 @@ void opcontrol() {
       flyWheelOn = false;
 
     }
+
     if (flyWheelOn == true) {
        flywheelMotors.move(127);
        flywheelOff = 0;
     }
+
     if (flyWheelOn == false) {
       flywheelMotors.brake();
       flywheelOff = 1;
       
     }
+
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == true)&&(plow == 1)) {
       rightClownPiston.set_value(true);
       wrongClownPiston.set_value(true);
       plow = 0;
-      
+      waitUntil(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == false);
     }  
-    if((master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == false)&& (plow == 0)){
+
+    if((master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == true)&& (plow == 0)){
       rightClownPiston.set_value(false);
       wrongClownPiston.set_value(false);
       plow = 1;
-
-    //lv_indev_wait_release
+      waitUntil(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == false);
     }
   }
-  
 }
