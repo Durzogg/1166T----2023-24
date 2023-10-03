@@ -101,9 +101,12 @@ void opcontrol() {
 	pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
 	pros::Motor_Group intakeMotors({leftIntake, rightIntake});
 
-	pros::ADIDigitalOut elevationPiston('E'); // whatever port we are using for the elevation pneumatic
-	pros::ADIDigitalOut rightClownPiston('A'); // whatever port we are using for the left plow piston
-	pros::ADIDigitalOut wrongClownPiston('H');// whatever port we are using for the right plow piston
+  //Port #'s
+  //1,2,3,4,5,6,7,8
+  //A,B,C,D,E,F,G,H
+	pros::ADIDigitalOut elevationPiston(5,false);  // defines what port we are using for the elevation pneumatic
+	pros::ADIDigitalOut rightClownPiston(3,false); // defines what port we are using for the left plow piston
+	pros::ADIDigitalOut wrongClownPiston(8,false); // defines what port we are using for the right plow piston
 
 	
 	
@@ -164,24 +167,23 @@ void opcontrol() {
       flyWheelOn = true;
     }
 
-    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_Y) == true)) {
-      flywheelMotors.move_velocity(40);
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == true)) {
+      flywheelMotors.move_velocity(80);
       flyWheelOn = true;
     }
-
+    
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_B) == true)) {
       flywheelMotors.move_velocity(60);
       flyWheelOn = true;
     }
 
-    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == true)) {
-      flywheelMotors.move_velocity(80);
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_Y) == true)) {
+      flywheelMotors.move_velocity(40);
       flyWheelOn = true;
     }
 
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) == true)) {
       flyWheelOn = false;
-
     }
 
     if (flyWheelOn == true) {
