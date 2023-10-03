@@ -119,7 +119,7 @@ void opcontrol() {
   
 
   while (1==1) {
-    // Elevation Code
+  // Elevation Code
 
     // Checks for button pressing and if the Fixed Pneumatic code hasn't been
     // activated
@@ -129,7 +129,7 @@ void opcontrol() {
     }  else if(elevationOn == 1){
       elevationPiston.set_value(false);
       if (elevationOff == 0) {
-        
+
         
         elevationOff = 1;
       }
@@ -151,6 +151,12 @@ void opcontrol() {
     else if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) == true)) {
       intakeMotors.move(-127);
       intakeOff = 0;
+    }
+
+    else if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_UP) == true)) {
+      intakeMotors.move(-127);
+      pros::delay(500);
+      intakeMotors.move(127);
     }
 
     else {
@@ -197,6 +203,9 @@ void opcontrol() {
       
     }
 
+
+
+  // Plow Code
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == true)&&(plow == 1)) {
       rightClownPiston.set_value(true);
       wrongClownPiston.set_value(true);
