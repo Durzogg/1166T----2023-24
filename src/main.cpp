@@ -93,8 +93,8 @@ void opcontrol() {
 	pros::Motor backLeft(4);
   pros::Motor_Group leftWheels({frontLeft, backLeft});
 
-	pros::Motor frontRight(3);
-	pros::Motor backRight(2);
+	pros::Motor frontRight(2);
+	pros::Motor backRight(3);
   pros::Motor_Group rightWheels({frontRight, backRight});
 
 
@@ -136,7 +136,7 @@ void opcontrol() {
     drvtrFB = (pros::E_CONTROLLER_ANALOG_LEFT_X);
     drvtrLR = (pros::E_CONTROLLER_ANALOG_RIGHT_Y);
     drvtrDZ = 10;
-    //printf(pros::E_CONTROLLER_ANALOG_LEFT_X);
+    printf("%d",pros::E_CONTROLLER_ANALOG_LEFT_X);
    //Makes the motors move by taking the FB and LR values and adding or subtracting them for one another
     if((abs(drvtrFB)||abs(drvtrLR))>drvtrDZ){
      // ^^ Checks to see if either joystick has moved out of the deadzone
