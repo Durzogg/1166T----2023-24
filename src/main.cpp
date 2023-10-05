@@ -27,8 +27,6 @@ void initialize() {
 	pros::lcd::set_text(1, "Hello PROS User!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
-	
-
 }
 
 /**
@@ -136,7 +134,6 @@ void opcontrol() {
     drvtrFB = (pros::E_CONTROLLER_ANALOG_LEFT_X);
     drvtrLR = (pros::E_CONTROLLER_ANALOG_RIGHT_Y);
     drvtrDZ = 10;
-    printf("%d",pros::E_CONTROLLER_ANALOG_LEFT_X);
    //Makes the motors move by taking the FB and LR values and adding or subtracting them for one another
     if((abs(drvtrFB)||abs(drvtrLR))>drvtrDZ){
      // ^^ Checks to see if either joystick has moved out of the deadzone
