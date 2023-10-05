@@ -84,7 +84,7 @@ void autonomous() {
  */
 void opcontrol() {
 
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
+	pros::Controller master (pros::E_CONTROLLER_MASTER);
 	
 
   //Intentional ERROR to reming us to check motor ports before running the code
@@ -103,8 +103,8 @@ void opcontrol() {
 	pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
 
 
-	pros::Motor leftIntake(11, 1);
-	pros::Motor rightIntake(12, 0);
+	pros::Motor leftIntake(11, 0);
+	pros::Motor rightIntake(12, 1);
 	pros::Motor_Group intakeMotors({leftIntake, rightIntake});
 
   //Port #'s
@@ -130,12 +130,19 @@ void opcontrol() {
   while (1==1) {
 
   //Drivetrain Code
+
    //Defines the values for the left and right joysticks, along with a deadzone where the position of the joysticks does nothing
    //These are put inside of the while loop so that the code can adapt to movements mid-match
     drvtrFB = (pros::E_CONTROLLER_ANALOG_LEFT_X);
     drvtrLR = (pros::E_CONTROLLER_ANALOG_RIGHT_Y);
     drvtrDZ = 10;
+    //printf(pros::E_CONTROLLER_ANALOG_LEFT_X);
    //Makes the motors move by taking the FB and LR values and adding or subtracting them for one another
+    if((abs(drvtrFB)||abs(drvtrLR))>drvtrDZ){
+     // ^^ Checks to see if either joystick has moved out of the deadzone
+      
+      
+    }
 
   // Elevation Code
    // Checks for button pressing and if the Fixed Pneumatic code hasn't been
