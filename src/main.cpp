@@ -86,19 +86,25 @@ void opcontrol() {
 
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	
-	pros::Motor frontLeft(1);
-	pros::Motor frontRight(3);
 
-	pros::Motor backLeft(4); // I don't know if this is correct, will check next time the robot is tested
+  //Intentional ERROR to reming us to check motor ports before running the code
+
+	pros::Motor frontLeft(1);
+	pros::Motor backLeft(4);
+  pros::Motor_Group leftWheels({frontLeft, backLeft});
+
+	pros::Motor frontRight(3);
 	pros::Motor backRight(2);
+  pros::Motor_Group rightWheels({frontRight, backRight});
+
 
 	pros::Motor leftFlywheel(5, 1);
 	pros::Motor rightFlywheel(6, 0);
-
-	pros::Motor leftIntake(11, 1); // I also don't know if this is correct, will check next time the robot is tested
-	pros::Motor rightIntake(12, 0);
-
 	pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
+
+
+	pros::Motor leftIntake(11, 1);
+	pros::Motor rightIntake(12, 0);
 	pros::Motor_Group intakeMotors({leftIntake, rightIntake});
 
   //Port #'s
@@ -116,13 +122,24 @@ void opcontrol() {
   int intakeOff = 1;
   int flywheelOff = 1;
   bool flyWheelOn = false;
-  
+  int drvtrDZ;
+  int drvtrFB;
+  int drvtrLR;
+
 
   while (1==1) {
-  // Elevation Code
 
-    // Checks for button pressing and if the Fixed Pneumatic code hasn't been
-    // activated
+  //Drivetrain Code
+   //Defines the values for the left and right joysticks, along with a deadzone where the position of the joysticks does nothing
+   //These are put inside of the while loop so that the code can adapt to movements mid-match
+    drvtrFB = (pros::E_CONTROLLER_ANALOG_LEFT_X);
+    drvtrLR = (pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+    drvtrDZ = 10;
+   //Makes the motors move by taking the FB and LR values and adding or subtracting them for one another
+
+  // Elevation Code
+   // Checks for button pressing and if the Fixed Pneumatic code hasn't been
+   // activated
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) == true) && (elevationOn != 2)) {
       elevationPiston.set_value(true);
       elevationOff = 0;
@@ -134,13 +151,12 @@ void opcontrol() {
         elevationOff = 1;
       }
     }
-    // Checks for B button being pressed and lockes the code to keep the
-    // pneumatic fixed in place
+   // Checks for B button being pressed and lockes the code to keep the
+   // pneumatic fixed in place
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) == true) || (elevationOn == 2)) {
       elevationPiston.set_value(true);
       elevationOn = 2;
     }
-
 
   // Intake Code
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true)) {
@@ -165,7 +181,6 @@ void opcontrol() {
         intakeOff = 1;
       }   
     }
-
 
   // Flywheel Code
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_X) == true)) {
@@ -203,9 +218,8 @@ void opcontrol() {
       
     }
 
-
-
   // Plow Code
+
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == true)&&(plow == 1)) {
       rightClownPiston.set_value(true);
       wrongClownPiston.set_value(true);
@@ -219,5 +233,6 @@ void opcontrol() {
       plow = 1;
       waitUntil(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == false);
     }
-  }
+
+  } // End of forever loop
 }
