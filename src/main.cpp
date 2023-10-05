@@ -85,7 +85,6 @@ void opcontrol() {
 	pros::Controller master (pros::E_CONTROLLER_MASTER);
 	
 
-  //Intentional ERROR to reming us to check motor ports before running the code
 
 	pros::Motor frontLeft(1);
 	pros::Motor backLeft(4);
@@ -137,8 +136,8 @@ void opcontrol() {
    //Makes the motors move by taking the FB and LR values and adding or subtracting them for one another
     if((abs(drvtrFB)||abs(drvtrLR))>drvtrDZ){
      // ^^ Checks to see if either joystick has moved out of the deadzone
-      rightWheels.move(drvtrFB-drvtrLR);
-      leftWheels.move(drvtrFB+drvtrLR);
+      rightWheels.move_voltage((drvtrFB-drvtrLR)*120);
+      leftWheels.move_voltage((drvtrFB+drvtrLR)*120);
     }else{
       rightWheels.brake();
       leftWheels.brake();
