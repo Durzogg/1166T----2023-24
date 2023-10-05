@@ -137,8 +137,11 @@ void opcontrol() {
    //Makes the motors move by taking the FB and LR values and adding or subtracting them for one another
     if((abs(drvtrFB)||abs(drvtrLR))>drvtrDZ){
      // ^^ Checks to see if either joystick has moved out of the deadzone
-      
-      
+      rightWheels.move(drvtrFB-drvtrLR);
+      leftWheels.move(drvtrFB+drvtrLR);
+    }else{
+      rightWheels.brake();
+      leftWheels.brake();
     }
 
   // Elevation Code
@@ -222,7 +225,7 @@ void opcontrol() {
       
     }
 
-  // Plow Code
+  // Plow Code -- Works
 
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == true)&&(plow == 1)) {
       rightClownPiston.set_value(true);
