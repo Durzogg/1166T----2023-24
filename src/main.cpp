@@ -136,8 +136,8 @@ void opcontrol() {
    //Makes the motors move by taking the FB and LR values and adding or subtracting them for one another
     if((abs(drvtrFB)||abs(drvtrLR))>drvtrDZ){
      // ^^ Checks to see if either joystick has moved out of the deadzone
-      rightWheels.move(drvtrFB-drvtrLR);
-      leftWheels.move(drvtrFB+drvtrLR);
+      rightWheels.move_voltage((drvtrFB-drvtrLR)*120);
+      leftWheels.move_voltage((drvtrFB+drvtrLR)*120);
     }else{
       rightWheels.brake();
       leftWheels.brake();
