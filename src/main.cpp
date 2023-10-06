@@ -138,6 +138,9 @@ void opcontrol() {
      // ^^ Checks to see if either joystick has moved out of the deadzone
       rightWheels.move_voltage((drvtrFB-drvtrLR)*120);
       leftWheels.move_voltage((drvtrFB+drvtrLR)*120);
+
+      // https://pros.cs.purdue.edu/v5/api/cpp/motors.html#move
+
     }else{
       rightWheels.brake();
       leftWheels.brake();
