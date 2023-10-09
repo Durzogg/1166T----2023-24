@@ -134,7 +134,7 @@ void opcontrol() {
       rightWheels.move((drvtrFB-drvtrLR)*1.28);
       leftWheels.move((drvtrFB+drvtrLR)*1.28);
       // https://pros.cs.purdue.edu/v5/api/cpp/motors.html#move
-      pros::lcd::set_text(1, "Working :D");
+      pros::lcd::set_text(2, "Working :D");
     }else{
       rightWheels.brake();
       leftWheels.brake();
