@@ -134,7 +134,7 @@ void opcontrol() {
     drvtrLR = (pros::E_CONTROLLER_ANALOG_RIGHT_X);
     drvtrDZ = 10;
    //Makes the motors move by taking the FB and LR values and adding or subtracting them for one another
-    if((abs(drvtrFB)||abs(drvtrLR))>drvtrDZ){
+    if((abs(drvtrFB)>drvtrDZ)||(abs(drvtrFB)>drvtrDZ)){
      // ^^ Checks to see if either joystick has moved out of the deadzone
       rightWheels.move((drvtrFB-drvtrLR)*1.28);
       leftWheels.move((drvtrFB+drvtrLR)*1.28);
