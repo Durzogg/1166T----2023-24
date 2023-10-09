@@ -24,7 +24,7 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
+	//pros::lcd::set_text(1, "Hello PROS User!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
 }
@@ -83,8 +83,6 @@ void autonomous() {
 void opcontrol() {
 
 	pros::Controller master (pros::E_CONTROLLER_MASTER);
-	
-
 
 	pros::Motor frontLeft(1);
 	pros::Motor backLeft(4);
@@ -94,11 +92,9 @@ void opcontrol() {
 	pros::Motor backRight(3);
   pros::Motor_Group rightWheels({frontRight, backRight});
 
-
 	pros::Motor leftFlywheel(5, 1);
 	pros::Motor rightFlywheel(6, 0);
 	pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
-
 
 	pros::Motor leftIntake(11, 0);
 	pros::Motor rightIntake(12, 1);
@@ -111,7 +107,6 @@ void opcontrol() {
 	pros::ADIDigitalOut rightClownPiston(3,false); // defines what port we are using for the left plow piston
 	pros::ADIDigitalOut wrongClownPiston(8,false); // defines what port we are using for the right plow piston
 
-	
 	
   int elevationOn = 1;
   int elevationOff = 1;
@@ -134,11 +129,11 @@ void opcontrol() {
     drvtrLR = (pros::E_CONTROLLER_ANALOG_RIGHT_X);
     drvtrDZ = 10;
    //Makes the motors move by taking the FB and LR values and adding or subtracting them for one another
-    if((abs(drvtrFB)>drvtrDZ)||(abs(drvtrFB)>drvtrDZ)){
+    if(abs(drvtrFB)>drvtrDZ){
      // ^^ Checks to see if either joystick has moved out of the deadzone
       rightWheels.move((drvtrFB-drvtrLR)*1.28);
       leftWheels.move((drvtrFB+drvtrLR)*1.28);
-      
+      pros::lcd::set_text(2, "Working! :D");
       // https://pros.cs.purdue.edu/v5/api/cpp/motors.html#move
 
     }else{
