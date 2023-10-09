@@ -24,7 +24,7 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	//pros::lcd::set_text(1, "Hello PROS User!");
+	pros::lcd::set_text(1, "Hello PROS User!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
 }
@@ -133,15 +133,13 @@ void opcontrol() {
      // ^^ Checks to see if either joystick has moved out of the deadzone
       rightWheels.move((drvtrFB-drvtrLR)*1.28);
       leftWheels.move((drvtrFB+drvtrLR)*1.28);
-      pros::lcd::set_text(2, "Working! :D");
       // https://pros.cs.purdue.edu/v5/api/cpp/motors.html#move
-
+      pros::lcd::set_text(1, "Working :D");
     }else{
       rightWheels.brake();
       leftWheels.brake();
-      master.print(0, 0, "Working! %s", ":D");
     }
-  master.print(0, 0, "Working! %s", ":D");
+
   // Elevation Code -- Building in Progress
   
    // Checks for button pressing and if the Fixed Pneumatic code hasn't been
