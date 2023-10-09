@@ -84,12 +84,12 @@ void opcontrol() {
 
 	pros::Controller master (pros::E_CONTROLLER_MASTER);
 
-	pros::Motor frontLeft(1);
-	pros::Motor backLeft(4);
+	pros::Motor frontLeft(1,0);
+	pros::Motor backLeft(4,0);
   pros::Motor_Group leftWheels({frontLeft, backLeft});
 
-	pros::Motor frontRight(2);
-	pros::Motor backRight(3);
+	pros::Motor frontRight(2,1);
+	pros::Motor backRight(3,1);
   pros::Motor_Group rightWheels({frontRight, backRight});
 
 	pros::Motor leftFlywheel(5, 1);
@@ -125,20 +125,20 @@ void opcontrol() {
 
    //Defines the values for the left and right joysticks, along with a deadzone where the position of the joysticks does nothing
    //These are put inside of the while loop so that the code can adapt to movements mid-match
-    drvtrFB = (pros::E_CONTROLLER_ANALOG_LEFT_Y);
-    drvtrLR = (pros::E_CONTROLLER_ANALOG_RIGHT_X);
+    drvtrFB = (master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y));
+    drvtrLR = (master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
     drvtrDZ = 10;
    //Makes the motors move by taking the FB and LR values and adding or subtracting them for one another
-    if(1==1){
+    if(abs(drvtrFB)>drvtrDZ){
      // ^^ Checks to see if either joystick has moved out of the deadzone
-      rightWheels.move(127);
-      leftWheels.move(127);
-     // https://pros.cs.purdue.edu/v5/api/cpp/motors.html#move
-      pros::lcd::set_text(2, "Working :D");
+      rightWheels.move((drvtrFB-drvtrLR));
+      leftWheels.move((drvtrFB+drvtrLR));
+      pros::lcd::set_text(1, "Working :D");
     }else{
       rightWheels.brake();
       leftWheels.brake();
     }
+
   // Elevation Code -- Building in Progress
   
    // Checks for button pressing and if the Fixed Pneumatic code hasn't been
