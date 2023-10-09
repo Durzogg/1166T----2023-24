@@ -130,14 +130,14 @@ void opcontrol() {
 
    //Defines the values for the left and right joysticks, along with a deadzone where the position of the joysticks does nothing
    //These are put inside of the while loop so that the code can adapt to movements mid-match
-    drvtrFB = (pros::E_CONTROLLER_ANALOG_LEFT_X);
-    drvtrLR = (pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+    drvtrFB = (pros::E_CONTROLLER_ANALOG_LEFT_Y);
+    drvtrLR = (pros::E_CONTROLLER_ANALOG_RIGHT_X);
     drvtrDZ = 10;
    //Makes the motors move by taking the FB and LR values and adding or subtracting them for one another
     if((abs(drvtrFB)||abs(drvtrLR))>drvtrDZ){
      // ^^ Checks to see if either joystick has moved out of the deadzone
-      rightWheels.move_voltage((drvtrFB-drvtrLR)*120);
-      leftWheels.move_voltage((drvtrFB+drvtrLR)*120);
+      rightWheels.move((drvtrFB-drvtrLR)*1.28);
+      leftWheels.move((drvtrFB+drvtrLR)*1.28);
 
       // https://pros.cs.purdue.edu/v5/api/cpp/motors.html#move
 
@@ -146,7 +146,8 @@ void opcontrol() {
       leftWheels.brake();
     }
 
-  // Elevation Code
+  // Elevation Code -- Building in Progress
+  
    // Checks for button pressing and if the Fixed Pneumatic code hasn't been
    // activated
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) == true) && (elevationOn != 2)) {
@@ -167,7 +168,7 @@ void opcontrol() {
       elevationOn = 2;
     }
 
-  // Intake Code
+  // Intake Code -- Works
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true)) {
       intakeMotors.move(127);
       intakeOff = 0;
@@ -191,7 +192,7 @@ void opcontrol() {
       }   
     }
 
-  // Flywheel Code
+  // Flywheel Code -- Works
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_X) == true)) {
       flywheelMotors.move_velocity(100);
       flyWheelOn = true;
