@@ -129,11 +129,11 @@ void opcontrol() {
     drvtrLR = (pros::E_CONTROLLER_ANALOG_RIGHT_X);
     drvtrDZ = 10;
    //Makes the motors move by taking the FB and LR values and adding or subtracting them for one another
-    if(abs(drvtrFB)>drvtrDZ){
+    if(abs(drvtrFB) > drvtrDZ){
      // ^^ Checks to see if either joystick has moved out of the deadzone
-      rightWheels.move((drvtrFB-drvtrLR)*1.28);
-      leftWheels.move((drvtrFB+drvtrLR)*1.28);
-      // https://pros.cs.purdue.edu/v5/api/cpp/motors.html#move
+      rightWheels.move(drvtrFB-drvtrLR);
+      leftWheels.move(drvtrFB+drvtrLR);
+     // https://pros.cs.purdue.edu/v5/api/cpp/motors.html#move
       pros::lcd::set_text(2, "Working :D");
     }else{
       rightWheels.brake();
