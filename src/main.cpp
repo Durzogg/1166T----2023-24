@@ -139,7 +139,6 @@ void opcontrol() {
       rightWheels.brake();
       leftWheels.brake();
     }
-
   // Elevation Code -- Building in Progress
   
    // Checks for button pressing and if the Fixed Pneumatic code hasn't been
