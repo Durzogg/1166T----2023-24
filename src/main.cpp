@@ -138,7 +138,7 @@ void opcontrol() {
      // ^^ Checks to see if either joystick has moved out of the deadzone
       rightWheels.move((drvtrFB-drvtrLR)*1.28);
       leftWheels.move((drvtrFB+drvtrLR)*1.28);
-
+      pros::lcd::set_text(2, "Working! :D");
       // https://pros.cs.purdue.edu/v5/api/cpp/motors.html#move
 
     }else{
