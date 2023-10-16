@@ -123,14 +123,14 @@ void opcontrol() {
   int drvtrLR;
 
 
-  while (1==1) {
+  while (1 == 1) {
 
   //Drivetrain Code -- Works
 
    //Defines the values for the left and right joysticks, along with a deadzone where the position of the joysticks does nothing
    //These are put inside of the while loop so that the code can adapt to movements mid-match
-    drvtrFB = (master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y));
-    drvtrLR = (master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
+    drvtrFB = (pros::E_CONTROLLER_ANALOG_LEFT_Y);
+    drvtrLR = (pros::E_CONTROLLER_ANALOG_RIGHT_X);
     drvtrDZ = 10;
    //Makes the motors move by taking the FB and LR values and adding or subtracting them for one another
     if((abs(drvtrFB)>drvtrDZ)||(abs(drvtrLR)>drvtrDZ)){
@@ -235,7 +235,7 @@ void opcontrol() {
 
   // Mysterious Code
   
-   else if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_UP) == true)) {
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_UP) == true)) {
       mysteriousMotors.move(127);
     }
 
