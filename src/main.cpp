@@ -100,10 +100,6 @@ void opcontrol() {
 	pros::Motor rightIntake(12, 1);
 	pros::Motor_Group intakeMotors({leftIntake, rightIntake});
 
-  pros::Motor mysteriousMotor1(99, 0);
-	pros::Motor mysteriousMotor2(100, 1);
-	pros::Motor_Group mysteriousMotors({mysteriousMotor1, mysteriousMotor2});
-
   //Port #'s
   //1,2,3,4,5,6,7,8
   //A,B,C,D,E,F,G,H
@@ -123,16 +119,19 @@ void opcontrol() {
   int drvtrLR;
 
 
-  while (1 == 1) {
+  while (1==1) {
 
-  //Drivetrain Code -- Works
+  //Drivetrain Code
 
-   //Defines the values for the left and right joysticks, along with a deadzone where the position of the joysticks does nothing
-   //These are put inside of the while loop so that the code can adapt to movements mid-match
-    drvtrFB = (pros::E_CONTROLLER_ANALOG_LEFT_Y);
-    drvtrLR = (pros::E_CONTROLLER_ANALOG_RIGHT_X);
+   //Defines the values for the left and right joysticks, along with 
+   //  a deadzone where the position of the joysticks does nothing
+   //These are put inside of the while loop so that the code can 
+   //  adapt to movements mid-match
+    drvtrFB = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+    drvtrLR = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
     drvtrDZ = 10;
-   //Makes the motors move by taking the FB and LR values and adding or subtracting them for one another
+   //Makes the motors move by taking the FB and LR values and adding 
+   //  or subtracting them for one another
     if((abs(drvtrFB)>drvtrDZ)||(abs(drvtrLR)>drvtrDZ)){
      // ^^ Checks to see if either joystick has moved out of the deadzone
       rightWheels.move((drvtrFB-drvtrLR));
@@ -150,9 +149,11 @@ void opcontrol() {
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) == true) && (elevationOn != 2)) {
       elevationPiston.set_value(true);
       elevationOff = 0;
-    }  else if(elevationOn == 1) {
+    }  else if(elevationOn == 1){
       elevationPiston.set_value(false);
       if (elevationOff == 0) {
+
+        
         elevationOff = 1;
       }
     }
@@ -173,7 +174,13 @@ void opcontrol() {
       intakeMotors.move(-127);
       intakeOff = 0;
     }
-    
+
+    else if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_UP) == true)) {
+      intakeMotors.move(-127);
+      pros::delay(500);
+      intakeMotors.move(127);
+    }
+
     else {
       intakeMotors.brake();
       if (intakeOff == 0) {
@@ -232,14 +239,6 @@ void opcontrol() {
       plow = 1;
       waitUntil(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == false);
     }
-
-  // Mysterious Code
-  
-    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_UP) == true)) {
-      mysteriousMotors.move(127);
-    }
-
-
 
   } // End of forever loop
 }
