@@ -100,6 +100,10 @@ void opcontrol() {
 	pros::Motor rightIntake(12, 1);
 	pros::Motor_Group intakeMotors({leftIntake, rightIntake});
 
+  pros::Motor mysteriousMotor1(99, 0);
+	pros::Motor mysteriousMotor2(100, 1);
+	pros::Motor_Group mysteriousMotors({mysteriousMotor1, mysteriousMotor2});
+
   //Port #'s
   //1,2,3,4,5,6,7,8
   //A,B,C,D,E,F,G,H
