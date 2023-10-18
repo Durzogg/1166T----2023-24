@@ -100,8 +100,8 @@ void opcontrol() {
 	pros::Motor rightIntake(12, 1);
 	pros::Motor_Group intakeMotors({leftIntake, rightIntake});
 
-  pros::Motor mysteriousMotor1(99, 0);
-	pros::Motor mysteriousMotor2(100, 1);
+  pros::Motor mysteriousMotor1(14, 0);
+	pros::Motor mysteriousMotor2(15, 1);
 	pros::Motor_Group mysteriousMotors({mysteriousMotor1, mysteriousMotor2});
 
   //Port #'s
@@ -124,7 +124,7 @@ void opcontrol() {
 
 
   while (1==1) {
-
+/*
   //Drivetrain Code
 
    //Defines the values for the left and right joysticks, along with 
@@ -243,6 +243,25 @@ void opcontrol() {
       plow = 1;
       waitUntil(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == false);
     }
+    */
+   if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) == true)) {
+      mysteriousMotor1.move(-127);
 
+    }else if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_UP) == true)) {
+      mysteriousMotor1.move(127);
+
+    }else{
+      mysteriousMotor1.brake();
+    }
+
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) == true)) {
+      mysteriousMotor2.move(-127);
+    } else if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true)) {
+      mysteriousMotor2.move(127);
+    } else {
+      mysteriousMotor2.brake();
+    }
+    
   } // End of forever loop
+
 }
