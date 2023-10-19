@@ -83,35 +83,37 @@ void autonomous() {
 void opcontrol() {
 
 	pros::Controller master (pros::E_CONTROLLER_MASTER);
+  pros::Controller partner (pros::E_CONTROLLER_PARTNER);
 
 	pros::Motor frontLeft(1,0);
 	pros::Motor backLeft(4,0);
   pros::Motor_Group leftWheels({frontLeft, backLeft});
-
-	pros::Motor frontRight(2,1);
+  leftWheels.move_velocity(100);
+	
+  pros::Motor frontRight(2,1);
 	pros::Motor backRight(3,1);
   pros::Motor_Group rightWheels({frontRight, backRight});
-
-	pros::Motor leftFlywheel(5, 1);
+  rightWheels.move_velocity(100);
+	
+  pros::Motor leftFlywheel(5, 1);
 	pros::Motor rightFlywheel(6, 0);
 	pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
 
-	pros::Motor leftIntake(11, 0);
-	pros::Motor rightIntake(12, 1);
-	pros::Motor_Group intakeMotors({leftIntake, rightIntake});
-
-  pros::Motor mysteriousMotor1(14, 0);
-	pros::Motor mysteriousMotor2(15, 1);
-	pros::Motor_Group mysteriousMotors({mysteriousMotor1, mysteriousMotor2});
+	pros::Motor intakeFeed(13, 0);
+  pros::Motor topIntake(14, 0);
+  pros::Motor bottomIntake(11, 0);
+  pros::Motor_Group intakeMotors({intakeFeed, topIntake, bottomIntake});
+  intakeMotors.move_velocity(100);
 
   //Port #'s
   //1,2,3,4,5,6,7,8
   //A,B,C,D,E,F,G,H
-	pros::ADIDigitalOut elevationPiston(5,false);  // defines what port we are using for the elevation pneumatic
-	pros::ADIDigitalOut rightClownPiston(3,false); // defines what port we are using for the left plow piston
-	pros::ADIDigitalOut wrongClownPiston(8,false); // defines what port we are using for the right plow piston
+	pros::ADIDigitalOut elevationPiston(5,false);
+	pros::ADIDigitalOut rightClownPiston(3,false);
+	pros::ADIDigitalOut wrongClownPiston(8,false);
+  pros::ADIDigitalOut shieldPiston(1,false);
+  
 
-	
   int elevationOn = 1;
   int elevationOff = 1;
   int plow = 1;
@@ -124,9 +126,8 @@ void opcontrol() {
 
 
   while (1==1) {
-/*
-  //Drivetrain Code
 
+  //Drivetrain Code -- [Working | Final Keybinds]
    //Defines the values for the left and right joysticks, along with 
    //  a deadzone where the position of the joysticks does nothing
    //These are put inside of the while loop so that the code can 
@@ -140,76 +141,32 @@ void opcontrol() {
      // ^^ Checks to see if either joystick has moved out of the deadzone
       rightWheels.move((drvtrFB-drvtrLR));
       leftWheels.move((drvtrFB+drvtrLR));
-      pros::lcd::set_text(1, "Working :D");
     }else{
       rightWheels.brake();
       leftWheels.brake();
     }
 
-  // Elevation Code -- Building in Progress
-  
+
+
+  // Elevation Code -- [Building in Progress | Final Keybinds | WIP]
    // Checks for button pressing and if the Fixed Pneumatic code hasn't been
    // activated
-    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) == true) && (elevationOn != 2)) {
+    if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && partner.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) == true && (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))) {
       elevationPiston.set_value(true);
       elevationOff = 0;
+
     }  else if(elevationOn == 1){
-      elevationPiston.set_value(false);
-      if (elevationOff == 0) {
 
-        
-        elevationOff = 1;
-      }
-    }
-   // Checks for B button being pressed and lockes the code to keep the
-   // pneumatic fixed in place
-    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) == true) || (elevationOn == 2)) {
-      elevationPiston.set_value(true);
-      elevationOn = 2;
     }
 
-  // Intake Code -- Works
-    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true)) {
-      intakeMotors.move(127);
-      intakeOff = 0;
-    }
-  
-    else if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) == true)) {
-      intakeMotors.move(-127);
-      intakeOff = 0;
-    }
-
-    else if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_UP) == true)) {
-      intakeMotors.move(-127);
-      pros::delay(500);
-      intakeMotors.move(127);
-    }
-
-    else {
-      intakeMotors.brake();
-      if (intakeOff == 0) {
-        intakeOff = 1;
-      }   
-    }
-
-  // Flywheel Code -- Works
+  // Flywheel Code -- [Working | Final Keybinds]
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_X) == true)) {
       flywheelMotors.move_velocity(100);
       flyWheelOn = true;
     }
 
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == true)) {
-      flywheelMotors.move_velocity(80);
-      flyWheelOn = true;
-    }
-    
-    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_B) == true)) {
-      flywheelMotors.move_velocity(60);
-      flyWheelOn = true;
-    }
-
-    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_Y) == true)) {
-      flywheelMotors.move_velocity(40);
+      flywheelMotors.move_velocity(75);
       flyWheelOn = true;
     }
 
@@ -219,49 +176,51 @@ void opcontrol() {
 
     if (flyWheelOn == true) {
        flywheelMotors.move(127);
-       flywheelOff = 0;
     }
 
     if (flyWheelOn == false) {
       flywheelMotors.brake();
-      flywheelOff = 1;
-      
     }
 
-  // Plow Code -- Works
+  // Feed Code [Working || Final Keybinds]
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) == true) {
+      intakeFeed.move(127);
+    } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true) {
+      intakeFeed.move(-127);
+    } else {
+      intakeFeed.brake();
+    }
 
-    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == true)&&(plow == 1)) {
+  // Plow Code -- [Working || Final Keybinds]
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == true) && (plow == 1)) {
       rightClownPiston.set_value(true);
       wrongClownPiston.set_value(true);
       plow = 0;
       waitUntil(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == false);
     }  
 
-    if((master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == true)&& (plow == 0)){
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == true) && (plow == 0)){
       rightClownPiston.set_value(false);
       wrongClownPiston.set_value(false);
       plow = 1;
       waitUntil(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == false);
     }
-    */
-   if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) == true)) {
-      mysteriousMotor1.move(-127);
 
-    }else if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_UP) == true)) {
-      mysteriousMotor1.move(127);
-
-    }else{
-      mysteriousMotor1.brake();
-    }
-
-    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) == true)) {
-      mysteriousMotor2.move(-127);
-    } else if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true)) {
-      mysteriousMotor2.move(127);
+  //Shield Code
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == true){
+      shieldPiston.set_value(true);
     } else {
-      mysteriousMotor2.brake();
+      shieldPiston.set_value(false);
     }
-    
-  } // End of forever loop
 
+
+  //Intake Code (Partner Controller)
+    if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) == true)) {
+      
+
+    }
+
+
+
+  } //end of forever code
 }
