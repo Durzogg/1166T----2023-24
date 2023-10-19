@@ -100,29 +100,37 @@ void opcontrol() {
 	pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
 
 	pros::Motor intakeFeed(13, 0);
-  pros::Motor topIntake(14, 0);
-  pros::Motor bottomIntake(11, 0);
-  pros::Motor_Group intakeMotors({intakeFeed, topIntake, bottomIntake});
+  pros::Motor armIntake(14, 0);
+  pros::Motor arm(11, 0);
+  pros::Motor_Group intakeMotors({intakeFeed, armIntake, arm});
   intakeMotors.move_velocity(100);
 
   //Port #'s
   //1,2,3,4,5,6,7,8
   //A,B,C,D,E,F,G,H
-	pros::ADIDigitalOut elevationPiston(5,false);
-	pros::ADIDigitalOut rightClownPiston(3,false);
-	pros::ADIDigitalOut wrongClownPiston(8,false);
-  pros::ADIDigitalOut shieldPiston(1,false);
-  
+  pros::ADIDigitalOut shieldPiston(3,false);
+	pros::ADIDigitalOut elevationPiston(1785349,false);
+
+	pros::ADIDigitalOut rightClownPiston(2,false);
+	pros::ADIDigitalOut wrongClownPiston(1,false);
+
+  pros::ADIDigitalIn intakeSwitch (5);
+  pros::ADIDigitalIn intakeButton (4);
 
   int elevationOn = 1;
   int elevationOff = 1;
   int plow = 1;
-  int intakeOff = 1;
-  int flywheelOff = 1;
   bool flyWheelOn = false;
+  int intakeOff = 1;
   int drvtrDZ;
+  int armDZ;
+  int armUD;
   int drvtrFB;
   int drvtrLR;
+
+  int printed = 0;
+  int thingy = arm.get_position();
+  partner.print(0, 0, "Minimum degrees: %d", thingy);
 
 
   while (1==1) {
@@ -151,7 +159,8 @@ void opcontrol() {
   // Elevation Code -- [Building in Progress | Final Keybinds | WIP]
    // Checks for button pressing and if the Fixed Pneumatic code hasn't been
    // activated
-    if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && partner.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) == true && (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))) {
+    if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == true) && (partner.get_digital(pros::E_CONTROLLER_DIGITAL_R2) == true) && (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))) {
+          
       elevationPiston.set_value(true);
       elevationOff = 0;
 
@@ -215,11 +224,55 @@ void opcontrol() {
 
 
   //Intake Code (Partner Controller)
-    if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) == true)) {
-      
+    armUD = partner.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+    armDZ = 10;
+
+    if (abs(armUD) > armDZ) {
+     // ^^ Checks to see if joystick has moved out of the deadzone
+      arm.move((armUD));
+    } else {
+      arm.brake();
+    }
+
+    if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_Y) == true && (intakeSwitch.get_value() == false)) {
+        arm.move(127);
+    } else {
+      arm.brake();
+    }
+
+    if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_A) == true && (intakeButton.get_value() == false)) {
+      arm.move(-127);
+    } else {
+      arm.brake();
+    }
+
+    if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_UP) == true) && (intakeSwitch.get_value() == false)) {
+      arm.move(127);
+    } else {
+      arm.brake();
+    }
+
+    if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) == true) && (intakeButton.get_value() == false)) {
+      arm.move(-127);
+      armIntake.move(127);
+    } else {
+      arm.brake();
+      armIntake.brake();
+    }
+    
+    if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true){
+      arm.move_relative(-45,600);
+    }
+
+    if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) == true){
 
     }
 
+    if ((intakeButton.get_value() == true) && (printed == 0)) {
+      int thing = arm.get_position();
+      partner.print(0, 0, "Maximum degrees: %d", thingy);
+      printed = 1;
+    }
 
 
   } //end of forever code
