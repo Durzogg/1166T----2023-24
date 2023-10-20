@@ -127,10 +127,8 @@ void opcontrol() {
   int armUD;
   int drvtrFB;
   int drvtrLR;
-
-  int printed = 0;
-  int thingy = arm.get_position();
-  partner.print(0, 0, "Minimum degrees: %d", thingy);
+  int minDeg;
+  int maxDeg;
 
 
   while (1==1) {
@@ -226,51 +224,72 @@ void opcontrol() {
   //Intake Code (Partner Controller)
     armUD = partner.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
     armDZ = 10;
+    minDeg = 0;
+    maxDeg = 165;
 
     if (abs(armUD) > armDZ) {
-     // ^^ Checks to see if joystick has moved out of the deadzone
       arm.move((armUD));
-    } else {
-      arm.brake();
     }
 
-    if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_Y) == true && (intakeSwitch.get_value() == false)) {
-        arm.move(127);
-    } else {
-      arm.brake();
-    }
-
-    if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_A) == true && (intakeButton.get_value() == false)) {
-      arm.move(-127);
-    } else {
-      arm.brake();
-    }
-
-    if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_UP) == true) && (intakeSwitch.get_value() == false)) {
-      arm.move(127);
-    } else {
-      arm.brake();
-    }
-
-    if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) == true) && (intakeButton.get_value() == false)) {
-      arm.move(-127);
+    else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_Y) == true) && (intakeSwitch.get_value() == false)) {
       armIntake.move(127);
-    } else {
+    }
+
+    else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_A) == true) && (intakeButton.get_value() == false)) {
+      armIntake.move(-127);
+    }
+
+    else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_UP) == true) && (intakeSwitch.get_value() == false)) {
+      do {
+        arm.move(127);
+      } while (intakeSwitch.get_value() == true);
+    }
+
+    else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) == true) && (intakeButton.get_value() == false)) {
+      do {
+        arm.move(-127);
+        armIntake.move(127);
+      } while (intakeButton.get_value() == false);
+    }
+    
+    else if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true){
+      arm.move_absolute((maxDeg / 2), 600);
+      armIntake.move(-127);
+      pros::delay(250);
+      armIntake.brake();
+      do {
+        arm.move(127);
+      } while (intakeSwitch.get_value() == false);
+    }
+
+    else if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) == true) {
+      do {
+        arm.move(127);
+      } while (intakeButton.get_value() == false);
+      arm.move_absolute(maxDeg, 600);
+      armIntake.move(-127);
+      pros::delay(250);
+      armIntake.brake();
+      do {
+        arm.move(127);
+      } while (intakeSwitch.get_value() == false);
+    }
+
+    else {
       arm.brake();
       armIntake.brake();
     }
-    
-    if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true){
-      arm.move_relative(-45,600);
-    }
 
-    if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) == true){
 
-    }
+
+
+    int printed = 0;
+
+    partner.print(0, 0, "Minimum degrees: %d", minDeg);
 
     if ((intakeButton.get_value() == true) && (printed == 0)) {
-      int thing = arm.get_position();
-      partner.print(0, 0, "Maximum degrees: %d", thingy);
+      maxDeg = arm.get_position();
+      partner.print(1, 0, "Maximum degrees: %d", maxDeg);
       printed = 1;
     }
 
