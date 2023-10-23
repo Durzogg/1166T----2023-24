@@ -48,6 +48,15 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
+  pros::ADIDigitalIn AutonSelect (6);
+
+  //1 is near, 2 is far
+
+  if (AutonSelect.get_value()<2400){
+    autonSelecto_thingy = 1;
+  } else {
+    autonSelecto_thingy = 2;
+  }
 
 }
 
@@ -64,6 +73,13 @@ void competition_initialize() {
  */
 void autonomous() {
   
+  //1 is near, 2 is far
+  
+  if(autonSelecto_thingy == 1){
+    
+  } else if(autonSelecto_thingy == 2){
+    
+  }
 }
 
 /**
@@ -148,7 +164,7 @@ void opcontrol() {
           // ^^ Checks to see if either joystick has moved out of the deadzone
           rightWheels.move((drvtrFB-drvtrLR));
           leftWheels.move((drvtrFB+drvtrLR));
-        } else{
+        } else {
           rightWheels.brake();
           leftWheels.brake();
         }     
@@ -252,13 +268,13 @@ void opcontrol() {
 
     else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_UP) == true) && (intakeSwitch.get_value() == false)) {
       do {
-        arm.move(127);
+        arm.move(92);
       } while (intakeSwitch.get_value() == true);
     }
 
     else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) == true) && (intakeButton.get_value() == false)) {
       do {
-        arm.move(-127);
+        arm.move(-92);
         armIntake.move(127);
       } while (intakeButton.get_value() == false);
     }
