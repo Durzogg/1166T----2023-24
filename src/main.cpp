@@ -88,6 +88,8 @@ void autonomous() {
   pros::Motor_Group rightWheels({frontRight, backRight});
   rightWheels.move_velocity(100);
   pros::Motor_Group allWheels({frontRight, backRight, frontLeft, backLeft});
+
+  // pros::screen::print(pros::E_TEXT_LARGE, "Starting DoR: %s", Inert.get_rotation());
 	
  //driving to the goal to drop off the match
   allWheels.move(-100);
@@ -107,7 +109,10 @@ void autonomous() {
 
  //driving to the match load zone and positioning to pick up the triball 
   rightWheels.move(100);
-  pros::delay(600);
+  pros::delay(300);
+  allWheels.brake();
+  leftWheels.move(100);
+  pros::delay(900);
   allWheels.brake();
   pros::delay(200);
 
