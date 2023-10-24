@@ -48,7 +48,7 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
-  pros::Imu Inert(10);
+  pros::Imu Inert(9);
   pros::ADIDigitalIn AutonSelect (6);
   Inert.reset();
   //1 is near, 2 is far
@@ -78,7 +78,7 @@ void autonomous() {
   int rotation;
 
   if(autonSelecto_thingy == 1){
-  pros::Imu Inert(10);
+  pros::Imu Inert(9);
   pros::Motor frontLeft(1,0);
 	pros::Motor backLeft(4,0);
   pros::Motor_Group leftWheels({frontLeft, backLeft});
@@ -89,8 +89,8 @@ void autonomous() {
   rightWheels.move_velocity(100);
   pros::Motor_Group allWheels({frontRight, backRight, frontLeft, backLeft});
 
-  // pros::screen::print(pros::E_TEXT_LARGE, "Starting DoR: %s", Inert.get_rotation());
-	
+
+
  //driving to the goal to drop off the match
   allWheels.move(-100);
   pros::delay(250);
@@ -141,6 +141,8 @@ void opcontrol() {
 	pros::Controller master (pros::E_CONTROLLER_MASTER);
   pros::Controller partner (pros::E_CONTROLLER_PARTNER);
 
+  pros::Imu Inert(9);
+
 	pros::Motor frontLeft(1,0);
 	pros::Motor backLeft(4,0);
   pros::Motor_Group leftWheels({frontLeft, backLeft});
@@ -151,6 +153,8 @@ void opcontrol() {
   pros::Motor_Group rightWheels({frontRight, backRight});
   rightWheels.move_velocity(100);
 	
+  pros::Motor_Group allWheels({frontRight, backRight, frontLeft, backLeft});
+
   pros::Motor leftFlywheel(5, 1);
 	pros::Motor rightFlywheel(6, 0);
 	pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
@@ -187,7 +191,10 @@ void opcontrol() {
   int maxDeg;
 
 
+
+allWheels.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
   while (1==1) {
+
 
   //Drivetrain Code -- [Working | Final Keybinds]
    //Defines the values for the left and right joysticks, along with 
