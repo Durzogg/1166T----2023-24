@@ -48,6 +48,7 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
+  pros::Imu Inert(10);
   pros::ADIDigitalIn AutonSelect (6);
   Inert.reset();
   //1 is near, 2 is far
@@ -77,7 +78,7 @@ void autonomous() {
   int rotation;
 
   if(autonSelecto_thingy == 1){
-
+  pros::Imu Inert(10);
   pros::Motor frontLeft(1,0);
 	pros::Motor backLeft(4,0);
   pros::Motor_Group leftWheels({frontLeft, backLeft});
@@ -88,7 +89,7 @@ void autonomous() {
   rightWheels.move_velocity(100);
   pros::Motor_Group allWheels({frontRight, backRight, frontLeft, backLeft});
 	
-  //driving to the goal to drop off the match
+ //driving to the goal to drop off the match
   allWheels.move(-100);
   pros::delay(250);
   allWheels.brake();
@@ -96,12 +97,20 @@ void autonomous() {
   allWheels.move(-100);
   pros::delay(750);
   allWheels.brake();
+  pros::delay(200);
 
-  //driving to the match load zone and  pick up the triball 
-  rotation = Inert.get_rotation();
-  rightWheels.move(25);
-  pros::delay(100);
+ //making ourselves flat against the goal 
+  rightWheels.move(-100);
+  pros::delay(600);
   allWheels.brake();
+  pros::delay(200);
+
+ //driving to the match load zone and positioning to pick up the triball 
+  rightWheels.move(100);
+  pros::delay(600);
+  allWheels.brake();
+  pros::delay(200);
+
 
   } else if(autonSelecto_thingy == 2){
     

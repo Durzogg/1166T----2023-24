@@ -17,7 +17,7 @@
 #include <string>
 
 int autonSelecto_thingy;
-pros::Imu Inert(10);
+
 
 #define waitUntil(condition) while (!(condition)) { pros::delay(50); }
 
