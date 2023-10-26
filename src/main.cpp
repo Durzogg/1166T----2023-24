@@ -106,15 +106,27 @@ void autonomous() {
   pros::delay(600);
   allWheels.brake();
   pros::delay(200);
+  Inert.tare();
 
  //driving to the match load zone and positioning to pick up the triball 
-  rightWheels.move(100);
-  pros::delay(300);
-  allWheels.brake();
-  leftWheels.move(100);
-  pros::delay(900);
+  allWheels.move(100);
+  pros::delay(200);
   allWheels.brake();
   pros::delay(200);
+  rightWheels.move(50);
+  leftWheels.move(-50);
+  waitUntil((Inert.get_heading()>=320)&&(Inert.get_heading()<=325));
+  allWheels.brake();
+  pros::delay(200);
+  allWheels.move(127);
+  pros::delay(250);
+  allWheels.brake();
+  pros::delay(300); 
+  rightWheels.move(-50);
+  leftWheels.move(50);
+  waitUntil((Inert.get_heading()>=49)&&(Inert.get_heading()<=55));
+  allWheels.brake(); 
+
 
 
   } else if(autonSelecto_thingy == 2){
@@ -157,8 +169,8 @@ void opcontrol() {
 	pros::Motor rightFlywheel(6, 0);
 	pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
 
-	pros::Motor intakeFeed(13, 0);
-  pros::Motor armIntake(14, 0);
+	pros::Motor intakeFeed(99, 0);
+  pros::Motor armIntake(20, 0);
   pros::Motor arm(11, 0);
   // pros::Motor_Group intakeMotors({intakeFeed, armIntake, arm});
   // intakeMotors.move_velocity(100);
@@ -313,12 +325,14 @@ allWheels.brake();
       arm.move((armUD));
     }
 
-    else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_Y) == true) && (intakeSwitch.get_value() == false)) {
+    else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_Y) == true)) {
       armIntake.move(127);
+      partner.print(0, 0, "It works");
     }
 
-    else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_A) == true) && (intakeButton.get_value() == false)) {
+    else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_A) == true)) {
       armIntake.move(-127);
+      partner.print(0, 0, "Oit Waakss");
     }
 
     else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_UP) == true) && (intakeSwitch.get_value() == false)) {
@@ -327,6 +341,7 @@ allWheels.brake();
       } while (intakeSwitch.get_value() == true);
     }
 
+    // works
     else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) == true) && (intakeButton.get_value() == false)) {
       do {
         arm.move(-92);
@@ -344,6 +359,8 @@ allWheels.brake();
       } while (intakeSwitch.get_value() == false);
     }
 
+
+  // doesn't work
     else if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) == true) {
       do {
         arm.move(127);
@@ -352,9 +369,6 @@ allWheels.brake();
       armIntake.move(-127);
       pros::delay(250);
       armIntake.brake();
-      do {
-        arm.move(127);
-      } while (intakeSwitch.get_value() == false);
     }
 
     else {
