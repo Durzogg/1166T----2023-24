@@ -146,13 +146,11 @@ void opcontrol() {
 	pros::Motor frontLeft(1,0);
 	pros::Motor backLeft(4,0);
   pros::Motor_Group leftWheels({frontLeft, backLeft});
-  leftWheels.move_velocity(100);
-	
+
   pros::Motor frontRight(2,1);
 	pros::Motor backRight(3,1);
   pros::Motor_Group rightWheels({frontRight, backRight});
-  rightWheels.move_velocity(100);
-	
+  
   pros::Motor_Group allWheels({frontRight, backRight, frontLeft, backLeft});
 
   pros::Motor leftFlywheel(5, 1);
@@ -162,8 +160,8 @@ void opcontrol() {
 	pros::Motor intakeFeed(13, 0);
   pros::Motor armIntake(14, 0);
   pros::Motor arm(11, 0);
-  pros::Motor_Group intakeMotors({intakeFeed, armIntake, arm});
-  intakeMotors.move_velocity(100);
+  // pros::Motor_Group intakeMotors({intakeFeed, armIntake, arm});
+  // intakeMotors.move_velocity(100);
 
   //Port #'s
   //1,2,3,4,5,6,7,8
@@ -189,10 +187,20 @@ void opcontrol() {
   int drvtrLR;
   int minDeg;
   int maxDeg;
+  
 
+allWheels.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
+Inert.tare();
 
+waitUntil(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == true)
+allWheels.move_velocity(100);
+leftWheels.move(-50);
+rightWheels.move(50);
+//15 degrees at 50% speed
+waitUntil((Inert.get_heading()>=90) && (Inert.get_heading()<=195))
+allWheels.brake();
 
-allWheels.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
+  
   while (1==1) {
 
 
