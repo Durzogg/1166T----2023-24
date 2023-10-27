@@ -153,8 +153,6 @@ void opcontrol() {
 	pros::Controller master (pros::E_CONTROLLER_MASTER);
   pros::Controller partner (pros::E_CONTROLLER_PARTNER);
 
-  pros::Imu Inert(9);
-
 	pros::Motor frontLeft(1,0);
 	pros::Motor backLeft(4,0);
   pros::Motor_Group leftWheels({frontLeft, backLeft});
@@ -200,17 +198,7 @@ void opcontrol() {
   int minDeg;
   int maxDeg;
   
-
-allWheels.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
-Inert.tare();
-
-waitUntil(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == true)
-allWheels.move_velocity(100);
-leftWheels.move(-50);
-rightWheels.move(50);
-//15 degrees at 50% speed
-waitUntil((Inert.get_heading()>=90) && (Inert.get_heading()<=195))
-allWheels.brake();
+  arm.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
   
   while (1==1) {
@@ -314,7 +302,6 @@ allWheels.brake();
       shieldPiston.set_value(false);
     }
 
-
   //Intake Code (Partner Controller)
     armUD = partner.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
     armDZ = 10;
@@ -322,7 +309,11 @@ allWheels.brake();
     maxDeg = 165;
 
     if (abs(armUD) > armDZ) {
-      arm.move((armUD));
+      if(armUD<125){
+        arm.move((armUD));
+      }else if (armUD>=125){
+        arm.move(armUD/3);
+      }
     }
 
     else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_Y) == true)) {
