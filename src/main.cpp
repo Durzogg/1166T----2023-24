@@ -53,11 +53,12 @@ void competition_initialize() {
   Inert.reset();
   //1 is near, 2 is far
 
-  if (AutonSelect.get_value()<2400){
+  /* if (AutonSelect.get_value()<2400){
     autonSelecto_thingy = 1;
   } else {
     autonSelecto_thingy = 2;
-  }
+  } */
+  autonSelecto_thingy = 1;
 
 }
 
@@ -77,10 +78,26 @@ void autonomous() {
   //1 is near, 2 is far
   int rotation;
 
-  if(autonSelecto_thingy == 1){
   pros::Imu Inert(9);
+  pros::ADIDigitalIn intakeButton(4);
   pros::Motor frontLeft(1,0);
 	pros::Motor backLeft(4,0);
+  pros::Motor arm(11, 0);
+  pros::Motor_Group leftWheels({frontLeft, backLeft});
+  leftWheels.move_velocity(100);
+  pros::Motor frontRight(2,1);
+	pros::Motor backRight(3,1);
+  pros::Motor_Group rightWheels({frontRight, backRight});
+  rightWheels.move_velocity(100);
+  pros::Motor_Group allWheels({frontRight, backRight, frontLeft, backLeft});
+
+  if(autonSelecto_thingy == 1) {
+
+  pros::Imu Inert(9);
+  pros::ADIDigitalIn intakeButton(4);
+  pros::Motor frontLeft(1,0);
+	pros::Motor backLeft(4,0);
+  pros::Motor arm(11, 0);
   pros::Motor_Group leftWheels({frontLeft, backLeft});
   leftWheels.move_velocity(100);
   pros::Motor frontRight(2,1);
@@ -90,6 +107,7 @@ void autonomous() {
   pros::Motor_Group allWheels({frontRight, backRight, frontLeft, backLeft});
 
 
+  Inert.tare();
 
  //driving to the goal to drop off the match
   allWheels.move(-100);
@@ -106,7 +124,7 @@ void autonomous() {
   pros::delay(600);
   allWheels.brake();
   pros::delay(200);
-  Inert.tare();
+  // Inert.tare();
 
  //driving to the match load zone and positioning to pick up the triball 
   allWheels.move(100);
@@ -115,22 +133,43 @@ void autonomous() {
   pros::delay(200);
   rightWheels.move(50);
   leftWheels.move(-50);
-  waitUntil((Inert.get_heading()>=320)&&(Inert.get_heading()<=325));
+  waitUntil((Inert.get_heading()>=345)&&(Inert.get_heading()<=350));
   allWheels.brake();
   pros::delay(200);
   allWheels.move(127);
-  pros::delay(250);
+  pros::delay(300);
   allWheels.brake();
-  pros::delay(300); 
+  pros::delay(300);
   rightWheels.move(-50);
   leftWheels.move(50);
-  waitUntil((Inert.get_heading()>=49)&&(Inert.get_heading()<=55));
-  allWheels.brake(); 
+  waitUntil((Inert.get_heading()>=60)&&(Inert.get_heading()<=90));
+  allWheels.brake();
+  // arm.move(-75);
+  // waitUntil(intakeButton.get_value() == true);
+  // arm.brake();
 
 
 
-  } else if(autonSelecto_thingy == 2){
-    
+  } else if (autonSelecto_thingy == 2) {
+
+  Inert.tare();
+
+ //driving to the goal to drop off the match
+  allWheels.move(-100);
+  pros::delay(250);
+  allWheels.brake();
+  pros::delay(500);
+  allWheels.move(-100);
+  pros::delay(750);
+  allWheels.brake();
+  pros::delay(200);
+
+ //making ourselves flat against the goal 
+  rightWheels.move(-100);
+  pros::delay(600);
+  allWheels.brake();
+  pros::delay(200);
+  // Inert.tare();
   }
 }
 
@@ -199,20 +238,8 @@ void opcontrol() {
   int drvtrLR;
   int minDeg;
   int maxDeg;
-  
 
-allWheels.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
-Inert.tare();
-
-waitUntil(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == true)
-allWheels.move_velocity(100);
-leftWheels.move(-50);
-rightWheels.move(50);
-//15 degrees at 50% speed
-waitUntil((Inert.get_heading()>=90) && (Inert.get_heading()<=195))
-allWheels.brake();
-
-  
+  allWheels.move_velocity(100);
   while (1==1) {
 
 
@@ -321,8 +348,14 @@ allWheels.brake();
     minDeg = 0;
     maxDeg = 165;
 
-    if (abs(armUD) > armDZ) {
-      arm.move((armUD));
+    if (armUD > armDZ) {
+      arm.move_velocity(100);
+      arm.move(armUD);
+    }
+
+    if (armUD < (-1 * armDZ)) {
+      arm.move_velocity(50);
+      arm.move(armUD);
     }
 
     else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_Y) == true)) {
@@ -334,11 +367,11 @@ allWheels.brake();
       armIntake.move(-127);
       partner.print(0, 0, "Oit Waakss");
     }
-
+/*
     else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_UP) == true) && (intakeSwitch.get_value() == false)) {
       do {
         arm.move(92);
-      } while (intakeSwitch.get_value() == true);
+      } while (intakeSwitch.get_value() == false);
     }
 
     // works
@@ -348,15 +381,19 @@ allWheels.brake();
         armIntake.move(127);
       } while (intakeButton.get_value() == false);
     }
+    */
+    
     
     else if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true){
-      arm.move_absolute((maxDeg / 2), 600);
+      arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+      arm.move(50);
       armIntake.move(-127);
-      pros::delay(250);
+      pros::delay(1000);
       armIntake.brake();
-      do {
-        arm.move(127);
-      } while (intakeSwitch.get_value() == false);
+      arm.brake();
+      pros::delay(1000);
+      arm.move_relative(-60, 100);
+      arm.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     }
 
 
@@ -376,8 +413,7 @@ allWheels.brake();
       armIntake.brake();
     }
 
-
-
+/*
 
     int printed = 0;
 
@@ -388,7 +424,6 @@ allWheels.brake();
       partner.print(1, 0, "Maximum degrees: %d", maxDeg);
       printed = 1;
     }
-
-
+*/
   } //end of forever code
 }
