@@ -347,7 +347,7 @@ void opcontrol() {
 
     if (armUD > armDZ) {
       arm.move_velocity(100);
-      arm.move(armUD);
+      arm.move(-armUD);
     }
 
     if (armUD < (-1 * armDZ)) {
@@ -364,22 +364,6 @@ void opcontrol() {
       armIntake.move(-127);
       partner.print(0, 0, "Oit Waakss");
     }
-/*
-    else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_UP) == true) && (intakeSwitch.get_value() == false)) {
-      do {
-        arm.move(92);
-      } while (intakeSwitch.get_value() == false);
-    }
-
-    // works
-    else if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) == true) && (intakeButton.get_value() == false)) {
-      do {
-        arm.move(-92);
-        armIntake.move(127);
-      } while (intakeButton.get_value() == false);
-    }
-    */
-    
     
     else if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true){
       arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
@@ -410,17 +394,5 @@ void opcontrol() {
       armIntake.brake();
     }
 
-/*
-
-    int printed = 0;
-
-    partner.print(0, 0, "Minimum degrees: %d", minDeg);
-
-    if ((intakeButton.get_value() == true) && (printed == 0)) {
-      maxDeg = arm.get_position();
-      partner.print(1, 0, "Maximum degrees: %d", maxDeg);
-      printed = 1;
-    }
-*/
   } //end of forever code
 }
