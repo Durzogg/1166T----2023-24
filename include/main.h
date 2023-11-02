@@ -16,8 +16,8 @@
 #define _PROS_MAIN_H_
 #include <string>
 
-int autonSelecto_thingy;
 
+int autonSelecto_thingy;
 
 #define waitUntil(condition) while (!(condition)) { pros::delay(50); }
 

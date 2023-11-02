@@ -1,4 +1,5 @@
 #include "main.h"
+#include "init.h"
 
 /**
  * A callback function for LLEMU's center button.
@@ -91,21 +92,8 @@ void autonomous() {
   rightWheels.move_velocity(100);
   pros::Motor_Group allWheels({frontRight, backRight, frontLeft, backLeft});
 
+
   if(autonSelecto_thingy == 1) {
-
-  pros::Imu Inert(9);
-  pros::ADIDigitalIn intakeButton(4);
-  pros::Motor frontLeft(1,0);
-	pros::Motor backLeft(4,0);
-  pros::Motor arm(11, 0);
-  pros::Motor_Group leftWheels({frontLeft, backLeft});
-  leftWheels.move_velocity(100);
-  pros::Motor frontRight(2,1);
-	pros::Motor backRight(3,1);
-  pros::Motor_Group rightWheels({frontRight, backRight});
-  rightWheels.move_velocity(100);
-  pros::Motor_Group allWheels({frontRight, backRight, frontLeft, backLeft});
-
 
   Inert.tare();
 
@@ -144,10 +132,12 @@ void autonomous() {
   leftWheels.move(50);
   waitUntil((Inert.get_heading()>=60)&&(Inert.get_heading()<=90));
   allWheels.brake();
-  // arm.move(-75);
-  // waitUntil(intakeButton.get_value() == true);
-  // arm.brake();
-
+  arm.move(75);
+  waitUntil(intakeButton.get_value() == true);
+  arm.brake();
+  arm.move(-100);
+  waitUntil(intakeSwitch.get_value() == true);
+  arm.brake();
 
 
   } else if (autonSelecto_thingy == 2) {
@@ -206,7 +196,7 @@ void opcontrol() {
 	pros::Motor rightFlywheel(6, 0);
 	pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
 
-	pros::Motor intakeFeed(99, 0);
+	pros::Motor intakeFeed(13, 0);
   pros::Motor armIntake(20, 0);
   pros::Motor arm(11, 0);
   // pros::Motor_Group intakeMotors({intakeFeed, armIntake, arm});
@@ -220,9 +210,6 @@ void opcontrol() {
 
 	pros::ADIDigitalOut rightClownPiston(2,false);
 	pros::ADIDigitalOut wrongClownPiston(1,false);
-
-  pros::ADIDigitalIn intakeSwitch (5);
-  pros::ADIDigitalIn intakeButton (4);
 
   int elevationOn = 1;
   int elevationOff = 1;
@@ -345,13 +332,11 @@ void opcontrol() {
     minDeg = 0;
     maxDeg = 165;
 
-    if (armUD > armDZ) {
-      arm.move_velocity(100);
-      arm.move(-armUD);
-    }
+    if ((armUD > armDZ) && (intakeButton.get_value() == false)) {
+      arm.move(armUD);
+    } 
 
-    if (armUD < (-1 * armDZ)) {
-      arm.move_velocity(50);
+    else if ((armUD < (-1 * armDZ)) && (intakeSwitch.get_value() == false)) {
       arm.move(armUD);
     }
 
