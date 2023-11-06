@@ -199,8 +199,7 @@ void opcontrol() {
 	pros::Motor intakeFeed(13, 0);
   pros::Motor armIntake(20, 0);
   pros::Motor arm(11, 0);
-  // pros::Motor_Group intakeMotors({intakeFeed, armIntake, arm});
-  // intakeMotors.move_velocity(100);
+
 
   //Port #'s
   //1,2,3,4,5,6,7,8
@@ -210,6 +209,8 @@ void opcontrol() {
 
 	pros::ADIDigitalOut rightClownPiston(2,false);
 	pros::ADIDigitalOut wrongClownPiston(1,false);
+
+  pros::ADIDigitalOut pistonUnknown(426, false);
 
   int elevationOn = 1;
   int elevationOff = 1;
@@ -263,13 +264,10 @@ void opcontrol() {
   // Elevation Code -- [Building in Progress | Final Keybinds | WIP]
    // Checks for button pressing and if the Fixed Pneumatic code hasn't been
    // activated
-    if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == true) && (partner.get_digital(pros::E_CONTROLLER_DIGITAL_R2) == true) && (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))) {
-          
+    if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == true) && (partner.get_digital(pros::E_CONTROLLER_DIGITAL_R2) == true) && (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))) {   
       elevationPiston.set_value(true);
-      elevationOff = 0;
-
-    }  else if (elevationOn == 1) {
-
+    } else {
+      elevationPiston.set_value(false);
     }
 
   // Flywheel Code -- [Working | Final Keybinds]
@@ -377,6 +375,13 @@ void opcontrol() {
     else {
       arm.brake();
       armIntake.brake();
+    }
+
+  // Code Unknown
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) == true) {
+      pistonUnknown.set_value(true);
+    } else {
+      pistonUnknown.set_value(false);
     }
 
   } //end of forever code
