@@ -93,7 +93,7 @@ void autonomous() {
   pros::Motor_Group allWheels({frontRight, backRight, frontLeft, backLeft});
 
 
-  if(autonSelecto_thingy == 1) {
+  if(autonSelecto_thingy == 1) { //near auton
 
   Inert.tare();
 
@@ -112,7 +112,7 @@ void autonomous() {
   pros::delay(600);
   allWheels.brake();
   pros::delay(200);
-  // Inert.tare();
+  Inert.tare();
 
  //driving to the match load zone and positioning to pick up the triball 
   allWheels.move(100);
@@ -121,7 +121,7 @@ void autonomous() {
   pros::delay(200);
   rightWheels.move(50);
   leftWheels.move(-50);
-  waitUntil((Inert.get_heading()>=345)&&(Inert.get_heading()<=350));
+  waitUntil((Inert.get_heading()>=325)&&(Inert.get_heading()<=335));
   allWheels.brake();
   pros::delay(200);
   allWheels.move(127);
@@ -140,7 +140,7 @@ void autonomous() {
   arm.brake();
 
 
-  } else if (autonSelecto_thingy == 2) {
+  } else if (autonSelecto_thingy == 2) { // far auton
 
   Inert.tare();
 
