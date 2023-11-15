@@ -84,6 +84,7 @@ void autonomous() {
   pros::Motor frontLeft(1,0);
 	pros::Motor backLeft(4,0);
   pros::Motor arm(11, 0);
+  pros::Motor armIntake(20, 0);
   pros::Motor_Group leftWheels({frontLeft, backLeft});
   leftWheels.move_velocity(100);
   pros::Motor frontRight(2,1);
@@ -121,7 +122,7 @@ void autonomous() {
   pros::delay(200);
   rightWheels.move(50);
   leftWheels.move(-50);
-  waitUntil((Inert.get_heading()>=325)&&(Inert.get_heading()<=335));
+  waitUntil((Inert.get_heading()>=335)&&(Inert.get_heading()<=345));
   allWheels.brake();
   pros::delay(200);
   allWheels.move(127);
@@ -132,12 +133,28 @@ void autonomous() {
   leftWheels.move(50);
   waitUntil((Inert.get_heading()>=60)&&(Inert.get_heading()<=90));
   allWheels.brake();
-  arm.move(75);
-  waitUntil(intakeButton.get_value() == true);
+
+  //driving in to get the triball
+  pros::delay(100);
+  allWheels.move(75);
+  armIntake.move(100);
+  pros::delay(350);
+  allWheels.move(-55);
+  pros::delay(250);
+  allWheels.brake();
+  arm.move(50);
+
+
+  //waitUntil(intakeButton.get_value() == true); <-- make an or statement in the future
+  pros::delay(1500);
+
+
+  //acheived triball from zone
   arm.brake();
-  arm.move(-100);
-  waitUntil(intakeSwitch.get_value() == true);
-  arm.brake();
+  pros::delay(100);
+  armIntake.brake();
+
+  //TEST FIRST BEFORE MODIFYING
 
 
   } else if (autonSelecto_thingy == 2) { // far auton
@@ -349,7 +366,7 @@ void opcontrol() {
       armIntake.move(-127);
       partner.print(0, 0, "Oit Waakss");
     }
-    
+    /*
     else if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true){
       arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
       arm.move(50);
@@ -362,7 +379,7 @@ void opcontrol() {
       arm.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     }
 
-
+*/
   // doesn't work
     else if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) == true) {
       do {
