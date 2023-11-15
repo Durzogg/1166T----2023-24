@@ -78,23 +78,31 @@ void autonomous() {
   
   //1 is near, 2 is far
   int rotation;
+    pros::Controller master (pros::E_CONTROLLER_MASTER);
+
 
   pros::Imu Inert(9);
   pros::ADIDigitalIn intakeButton(4);
+  pros::ADIDigitalIn intakeSwitch(8);
+
   pros::Motor frontLeft(1,0);
 	pros::Motor backLeft(4,0);
-  pros::Motor arm(11, 0);
   pros::Motor_Group leftWheels({frontLeft, backLeft});
   leftWheels.move_velocity(100);
+
   pros::Motor frontRight(2,1);
 	pros::Motor backRight(3,1);
   pros::Motor_Group rightWheels({frontRight, backRight});
   rightWheels.move_velocity(100);
+
   pros::Motor_Group allWheels({frontRight, backRight, frontLeft, backLeft});
+
+  pros::Motor arm(11, 0);
+  pros::Motor armIntake(20, 0);
+
 
 
   if(autonSelecto_thingy == 1) {
-
   Inert.tare();
 
  //driving to the goal to drop off the match
@@ -131,26 +139,33 @@ void autonomous() {
   rightWheels.move(-50);
   leftWheels.move(50);
   waitUntil((Inert.get_heading()>=60)&&(Inert.get_heading()<=90));
+
+  allWheels.move(50);
+  pros::delay(125);
   allWheels.brake();
+
+  armIntake.move(100);
   arm.move(75);
-  waitUntil(intakeButton.get_value() == true);
+  pros::delay(750);
   arm.brake();
+  
+  arm.move_relative(-15, 50);
+  armIntake.move(100);
+  allWheels.move(25);
+  pros::delay(1000);
+  armIntake.brake();
+  allWheels.brake();
+
   arm.move(-100);
   waitUntil(intakeSwitch.get_value() == true);
   arm.brake();
 
-
   } else if (autonSelecto_thingy == 2) {
-
   Inert.tare();
 
  //driving to the goal to drop off the match
   allWheels.move(-100);
-  pros::delay(250);
-  allWheels.brake();
-  pros::delay(500);
-  allWheels.move(-100);
-  pros::delay(750);
+  pros::delay(1500);
   allWheels.brake();
   pros::delay(200);
 
@@ -161,6 +176,7 @@ void autonomous() {
   pros::delay(200);
   // Inert.tare();
   }
+  
 }
 
 /**
@@ -210,7 +226,8 @@ void opcontrol() {
 	pros::ADIDigitalOut rightClownPiston(2,false);
 	pros::ADIDigitalOut wrongClownPiston(1,false);
 
-  pros::ADIDigitalOut pistonUnknown(426, false);
+  pros::ADIDigitalIn intakeButton(4);
+  pros::ADIDigitalIn intakeSwitch(8);
 
   int elevationOn = 1;
   int elevationOff = 1;
@@ -375,13 +392,6 @@ void opcontrol() {
     else {
       arm.brake();
       armIntake.brake();
-    }
-
-  // Code Unknown
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) == true) {
-      pistonUnknown.set_value(true);
-    } else {
-      pistonUnknown.set_value(false);
     }
 
   } //end of forever code
