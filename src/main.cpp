@@ -234,13 +234,12 @@ void opcontrol() {
   //1,2,3,4,5,6,7,8
   //A,B,C,D,E,F,G,H
   pros::ADIDigitalOut shieldPiston(3,false);
-	pros::ADIDigitalOut elevationPiston(1785349,false);
+	pros::ADIDigitalOut elevationPiston(6,false);
 
 	pros::ADIDigitalOut rightClownPiston(2,false);
 	pros::ADIDigitalOut wrongClownPiston(1,false);
 
-  int elevationOn = 1;
-  int elevationOff = 1;
+  int elevation = 1;
   int plow = 1;
   bool flyWheelOn = false;
   int intakeOff = 1;
@@ -252,6 +251,7 @@ void opcontrol() {
   int minDeg;
   int maxDeg;
 
+  elevationPiston.set_value(false);
   allWheels.move_velocity(100);
   while (1==1) {
 
@@ -284,19 +284,6 @@ void opcontrol() {
         rightWheels.brake();
         leftWheels.brake();
     }
-
-    }
-
-
-  // Elevation Code -- [Building in Progress | Final Keybinds | WIP]
-   // Checks for button pressing and if the Fixed Pneumatic code hasn't been
-   // activated
-    if ((partner.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == true) && (partner.get_digital(pros::E_CONTROLLER_DIGITAL_R2) == true) && (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))) {
-          
-      elevationPiston.set_value(true);
-      elevationOff = 0;
-
-    }  else if (elevationOn == 1) {
 
     }
 
@@ -377,20 +364,9 @@ void opcontrol() {
       armIntake.move(-127);
       partner.print(0, 0, "Oit Waakss");
     }
-    /*
-    else if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true){
-      arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-      arm.move(50);
-      armIntake.move(-127);
-      pros::delay(1000);
-      armIntake.brake();
-      arm.brake();
-      pros::delay(1000);
-      arm.move_relative(-60, 100);
-      arm.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-    }
 
-*/
+
+/*
   // doesn't work
     else if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) == true) {
       do {
@@ -401,11 +377,20 @@ void opcontrol() {
       pros::delay(250);
       armIntake.brake();
     }
+*/
 
     else {
       arm.brake();
       armIntake.brake();
     }
+
+    if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == true) {
+      if(elevation = 1){
+        elevationPiston.set_value(true);
+      } else if(elevation = 2){
+        elevationPiston.set_value(false);        
+      }
+    } 
 
   } //end of forever code
 }
