@@ -80,7 +80,6 @@ void autonomous() {
   int rotation;
 
   pros::Imu Inert(9);
-  pros::ADIDigitalIn intakeButton(4);
   pros::Motor frontLeft(1,0);
 	pros::Motor backLeft(4,0);
   pros::Motor arm(11, 0);
@@ -102,7 +101,7 @@ void autonomous() {
   allWheels.move(-100);
   pros::delay(250);
   allWheels.brake();
-  pros::delay(500);
+  pros::delay(750);
   allWheels.move(-100);
   pros::delay(750);
   allWheels.brake();
@@ -138,21 +137,35 @@ void autonomous() {
   pros::delay(100);
   allWheels.move(75);
   armIntake.move(100);
-  pros::delay(350);
-  allWheels.move(-55);
-  pros::delay(250);
+  pros::delay(450);
+  allWheels.move(-45);
+  pros::delay(300);
   allWheels.brake();
-  arm.move(50);
 
+  //picking up triball
+  arm.move(60);
 
   //waitUntil(intakeButton.get_value() == true); <-- make an or statement in the future
-  pros::delay(1500);
+  pros::delay(2000);
 
 
-  //acheived triball from zone
+  //acheived triball from zone and picking it up
   arm.brake();
-  pros::delay(100);
+  pros::delay(300);
   armIntake.brake();
+  pros::delay(100);
+  arm.move(-100);
+  waitUntil(intakeSwitch.get_value() == true);
+  arm.brake();
+
+  pros::delay(200);
+
+  //DONT TOUCH TO TOP CODE IT WORKS
+
+  rightWheels.move(50);
+  leftWheels.move(-50);
+  waitUntil((Inert.get_heading()>=335)&&(Inert.get_heading()<=345));
+  allWheels.brake();
 
   //TEST FIRST BEFORE MODIFYING
 
@@ -216,8 +229,6 @@ void opcontrol() {
 	pros::Motor intakeFeed(13, 0);
   pros::Motor armIntake(20, 0);
   pros::Motor arm(11, 0);
-  // pros::Motor_Group intakeMotors({intakeFeed, armIntake, arm});
-  // intakeMotors.move_velocity(100);
 
   //Port #'s
   //1,2,3,4,5,6,7,8
