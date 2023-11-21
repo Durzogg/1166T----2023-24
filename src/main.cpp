@@ -112,7 +112,6 @@ void autonomous() {
   pros::delay(600);
   allWheels.brake();
   pros::delay(200);
-  Inert.tare();
 
  //driving to the match load zone and positioning to pick up the triball 
   allWheels.move(100);
@@ -146,7 +145,7 @@ void autonomous() {
   arm.move(60);
 
   //waitUntil(intakeButton.get_value() == true); <-- make an or statement in the future
-  pros::delay(2000);
+  pros::delay(1500);
 
 
   //acheived triball from zone and picking it up
@@ -160,13 +159,12 @@ void autonomous() {
 
   pros::delay(200);
 
-  //DONT TOUCH TO TOP CODE IT WORKS
-
   rightWheels.move(50);
   leftWheels.move(-50);
   waitUntil((Inert.get_heading()>=335)&&(Inert.get_heading()<=345));
   allWheels.brake();
 
+  //DONT TOUCH TO TOP CODE IT WORKS (once)
   //TEST FIRST BEFORE MODIFYING
 
 
