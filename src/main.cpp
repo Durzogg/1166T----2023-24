@@ -118,7 +118,6 @@ void autonomous() {
   pros::delay(600);
   allWheels.brake();
   pros::delay(200);
-  Inert.tare();
 
  //driving to the match load zone and positioning to pick up the triball 
   allWheels.move(100);
@@ -273,7 +272,7 @@ void opcontrol() {
     drvtrDZ = 10;
    //Makes the motors move by taking the FB and LR values and adding 
    //  or subtracting them for one another
-    if ((intakeButton.get_value() == false) && (intakeSwitch.get_value() == false )) {
+    
         if((abs(drvtrFB)>drvtrDZ)||(abs(drvtrLR)>drvtrDZ)) {
           // ^^ Checks to see if either joystick has moved out of the deadzone
           rightWheels.move((drvtrFB-drvtrLR));
@@ -404,4 +403,3 @@ void opcontrol() {
     } 
 
   } //end of forever code
-}
