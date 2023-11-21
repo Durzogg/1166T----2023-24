@@ -387,8 +387,12 @@ void opcontrol() {
     if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == true) {
       if(elevation = 1){
         elevationPiston.set_value(true);
+        elevation = 2;
+        waitUntil((pros::E_CONTROLLER_DIGITAL_L2) == false);
       } else if(elevation = 2){
-        elevationPiston.set_value(false);        
+        elevationPiston.set_value(false); 
+        elevation = 1;
+        waitUntil((pros::E_CONTROLLER_DIGITAL_L2) == false);
       }
     } 
 
