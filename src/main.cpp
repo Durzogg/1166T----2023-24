@@ -82,11 +82,10 @@ void autonomous() {
 
 
   pros::Imu Inert(9);
-  pros::ADIDigitalIn intakeButton(4);
-  pros::ADIDigitalIn intakeSwitch(8);
-
   pros::Motor frontLeft(1,0);
 	pros::Motor backLeft(4,0);
+  pros::Motor arm(11, 0);
+  pros::Motor armIntake(20, 0);
   pros::Motor_Group leftWheels({frontLeft, backLeft});
   leftWheels.move_velocity(100);
 
@@ -100,16 +99,15 @@ void autonomous() {
   pros::Motor arm(11, 0);
   pros::Motor armIntake(20, 0);
 
+  if(autonSelecto_thingy == 1) { //near auton
 
-
-  if(autonSelecto_thingy == 1) {
   Inert.tare();
 
  //driving to the goal to drop off the match
   allWheels.move(-100);
   pros::delay(250);
   allWheels.brake();
-  pros::delay(500);
+  pros::delay(750);
   allWheels.move(-100);
   pros::delay(750);
   allWheels.brake();
@@ -120,7 +118,7 @@ void autonomous() {
   pros::delay(600);
   allWheels.brake();
   pros::delay(200);
-  // Inert.tare();
+  Inert.tare();
 
  //driving to the match load zone and positioning to pick up the triball 
   allWheels.move(100);
@@ -129,7 +127,7 @@ void autonomous() {
   pros::delay(200);
   rightWheels.move(50);
   leftWheels.move(-50);
-  waitUntil((Inert.get_heading()>=345)&&(Inert.get_heading()<=350));
+  waitUntil((Inert.get_heading()>=335)&&(Inert.get_heading()<=345));
   allWheels.brake();
   pros::delay(200);
   allWheels.move(127);
@@ -144,23 +142,45 @@ void autonomous() {
   pros::delay(125);
   allWheels.brake();
 
+  //driving in to get the triball
+  pros::delay(100);
+  allWheels.move(75);
   armIntake.move(100);
-  arm.move(75);
-  pros::delay(750);
-  arm.brake();
-  
-  arm.move_relative(-15, 50);
-  armIntake.move(100);
-  allWheels.move(25);
-  pros::delay(1000);
-  armIntake.brake();
+  pros::delay(450);
+  allWheels.move(-45);
+  pros::delay(300);
   allWheels.brake();
 
+  //picking up triball
+  arm.move(60);
+
+  //waitUntil(intakeButton.get_value() == true); <-- make an or statement in the future
+  pros::delay(2000);
+
+
+  //acheived triball from zone and picking it up
+  arm.brake();
+  pros::delay(300);
+  armIntake.brake();
+  pros::delay(100);
   arm.move(-100);
   waitUntil(intakeSwitch.get_value() == true);
   arm.brake();
 
-  } else if (autonSelecto_thingy == 2) {
+  pros::delay(200);
+
+  //DONT TOUCH TO TOP CODE IT WORKS
+
+  rightWheels.move(50);
+  leftWheels.move(-50);
+  waitUntil((Inert.get_heading()>=335)&&(Inert.get_heading()<=345));
+  allWheels.brake();
+
+  //TEST FIRST BEFORE MODIFYING
+
+
+  } else if (autonSelecto_thingy == 2) { // far auton
+
   Inert.tare();
 
  //driving to the goal to drop off the match
@@ -364,7 +384,7 @@ void opcontrol() {
       armIntake.move(-127);
       partner.print(0, 0, "Oit Waakss");
     }
-    
+    /*
     else if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true){
       arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
       arm.move(50);
@@ -377,7 +397,7 @@ void opcontrol() {
       arm.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     }
 
-
+*/
   // doesn't work
     else if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) == true) {
       do {
