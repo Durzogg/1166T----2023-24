@@ -82,10 +82,9 @@ void autonomous() {
 
 
   pros::Imu Inert(9);
+
   pros::Motor frontLeft(1,0);
 	pros::Motor backLeft(4,0);
-  pros::Motor arm(11, 0);
-  pros::Motor armIntake(20, 0);
   pros::Motor_Group leftWheels({frontLeft, backLeft});
   leftWheels.move_velocity(100);
 
@@ -98,6 +97,9 @@ void autonomous() {
 
   pros::Motor arm(11, 0);
   pros::Motor armIntake(20, 0);
+
+  pros::ADIDigitalIn Distance(7);
+  
 
   if(autonSelecto_thingy == 1) { //near auton
 
@@ -130,7 +132,7 @@ void autonomous() {
   allWheels.brake();
   pros::delay(200);
   allWheels.move(127);
-  pros::delay(300);
+  waitUntil(Distance.get_value() >= 475);
   allWheels.brake();
   pros::delay(300);
   rightWheels.move(-50);
@@ -177,6 +179,33 @@ void autonomous() {
 
   //TEST FIRST BEFORE MODIFYING
 
+  allWheels.move(100);
+  pros::delay(275);
+  allWheels.brake();
+  rightWheels.move(50);
+  leftWheels.move(-50);
+  waitUntil((Inert.get_heading()>=293)&&(Inert.get_heading()<=303));
+  allWheels.brake();
+  pros::delay(100);
+  allWheels.move(100);
+  pros::delay(150);
+  allWheels.brake();
+  pros::delay(300);
+
+
+  pros::delay(100);
+  arm.move(100);
+  armIntake.move(-100);
+  pros::delay(400);
+  arm.brake();
+  armIntake.brake();
+  pros::delay(200);
+  arm.move(-100);
+  waitUntil(intakeSwitch.get_value() == true);
+  arm.brake();
+  allWheels.move(100);
+  pros::delay(1000);
+  allWheels.brake();
 
   } else if (autonSelecto_thingy == 2) { // far auton
 
