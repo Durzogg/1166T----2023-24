@@ -98,7 +98,7 @@ void autonomous() {
   pros::Motor arm(11, 0);
   pros::Motor armIntake(20, 0);
 
-  pros::ADIDigitalIn Distance(7);
+  pros::Distance Distance(7);
   
 
   if(autonSelecto_thingy == 1) { //near auton
@@ -132,7 +132,9 @@ void autonomous() {
   allWheels.brake();
   pros::delay(200);
   allWheels.move(127);
-  waitUntil(Distance.get_value() >= 475);
+  master.print(0, 0, "%d is the thing.", Distance.get());
+  waitUntil((Distance.get() >= 190) && (Distance.get() <= 240));
+  master.print(0, 0, "%d is the thing.", Distance.get());
   allWheels.brake();
   pros::delay(300);
   rightWheels.move(-50);
@@ -153,13 +155,13 @@ void autonomous() {
   allWheels.brake();
 
   //picking up triball
-  arm.move(60);
+  arm.move(20);
 
   //waitUntil(intakeButton.get_value() == true); <-- make an or statement in the future
   pros::delay(2000);
 
 
-  //acheived triball from zone and picking it up
+  // achieved triball from zone and picking it up
   arm.brake();
   pros::delay(300);
   armIntake.brake();
@@ -184,7 +186,7 @@ void autonomous() {
   allWheels.brake();
   rightWheels.move(50);
   leftWheels.move(-50);
-  waitUntil((Inert.get_heading()>=293)&&(Inert.get_heading()<=303));
+  waitUntil((Inert.get_heading()>=290)&&(Inert.get_heading()<=300));
   allWheels.brake();
   pros::delay(100);
   allWheels.move(100);
@@ -302,25 +304,26 @@ void opcontrol() {
    //Makes the motors move by taking the FB and LR values and adding 
    //  or subtracting them for one another
     
-        if((abs(drvtrFB)>drvtrDZ)||(abs(drvtrLR)>drvtrDZ)) {
-          // ^^ Checks to see if either joystick has moved out of the deadzone
-          rightWheels.move((drvtrFB-drvtrLR));
-          leftWheels.move((drvtrFB+drvtrLR));
-        } else {
-          rightWheels.brake();
-          leftWheels.brake();
-        }     
+    if((abs(drvtrFB) > drvtrDZ) || (abs(drvtrLR) > drvtrDZ)) {
+      // ^^ Checks to see if either joystick has moved out of the deadzone
+      rightWheels.move((drvtrFB-drvtrLR));
+      leftWheels.move((drvtrFB+drvtrLR));
 
-        if((abs(drvtrFB)>drvtrDZ)||(abs(drvtrLR)>drvtrDZ)) {
-          // ^^ Checks to see if either joystick has moved out of the deadzone
-          rightWheels.move((drvtrFB-drvtrLR));
-          leftWheels.move((drvtrFB+drvtrLR));
-      }else{
-        rightWheels.brake();
-        leftWheels.brake();
+    } else {
+      rightWheels.brake();
+      leftWheels.brake();
+    }     
+
+    if((abs(drvtrFB) > drvtrDZ) || (abs(drvtrLR) > drvtrDZ)) {
+      // ^^ Checks to see if either joystick has moved out of the deadzone
+      rightWheels.move((drvtrFB - drvtrLR));
+      leftWheels.move((drvtrFB + drvtrLR));
+      
+    } else {
+      rightWheels.brake();
+      leftWheels.brake();
     }
 
-    }
 
   // Flywheel Code -- [Working | Final Keybinds]
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_X) == true)) {
@@ -348,8 +351,10 @@ void opcontrol() {
   // Feed Code [Working || Final Keybinds]
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) == true) {
       intakeFeed.move(127);
+
     } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true) {
       intakeFeed.move(-127);
+
     } else {
       intakeFeed.brake();
     }
@@ -372,6 +377,7 @@ void opcontrol() {
   //Shield Code
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == true){
       shieldPiston.set_value(true);
+
     } else {
       shieldPiston.set_value(false);
     }
@@ -420,11 +426,13 @@ void opcontrol() {
     }
 
     if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == true) {
-      if(elevation = 1){
+
+      if(elevation == 1) {
         elevationPiston.set_value(true);
         elevation = 2;
         waitUntil(partner.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == false);
-      } else if(elevation = 2){
+
+      } else if (elevation == 2) {
         elevationPiston.set_value(false); 
         elevation = 1;
         waitUntil(partner.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == false);
@@ -432,3 +440,4 @@ void opcontrol() {
     } 
 
   } //end of forever code
+}
