@@ -1,5 +1,5 @@
 #include "main.h"
-#include "init.h"
+#include "initialize.h"
 
 /**
  * A callback function for LLEMU's center button.
@@ -49,7 +49,7 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
-  pros::Imu Inert(9);
+
   pros::ADIDigitalIn AutonSelect (6);
   Inert.reset();
   //1 is near, 2 is far
@@ -78,31 +78,14 @@ void autonomous() {
   
   //1 is near, 2 is far
   int rotation;
-    pros::Controller master (pros::E_CONTROLLER_MASTER);
-
-
-  pros::Imu Inert(9);
-
-  pros::Motor frontLeft(1,0);
-	pros::Motor backLeft(4,0);
-  pros::Motor_Group leftWheels({frontLeft, backLeft});
-  leftWheels.move_velocity(100);
-
-  pros::Motor frontRight(2,1);
-	pros::Motor backRight(3,1);
-  pros::Motor_Group rightWheels({frontRight, backRight});
-  rightWheels.move_velocity(100);
-
-  pros::Motor_Group allWheels({frontRight, backRight, frontLeft, backLeft});
-
-  pros::Motor arm(11, 0);
-  pros::Motor armIntake(20, 0);
 
   pros::Distance Distance(7);
   
+  allWheels.move_velocity(100);
+  allWheels.brake();
 
   if(autonSelecto_thingy == 1) { //near auton
-
+  
   Inert.tare();
 
  //driving to the goal to drop off the match
@@ -245,26 +228,11 @@ void autonomous() {
  */
 void opcontrol() {
 
-	pros::Controller master (pros::E_CONTROLLER_MASTER);
-  pros::Controller partner (pros::E_CONTROLLER_PARTNER);
-
-	pros::Motor frontLeft(1,0);
-	pros::Motor backLeft(4,0);
-  pros::Motor_Group leftWheels({frontLeft, backLeft});
-
-  pros::Motor frontRight(2,1);
-	pros::Motor backRight(3,1);
-  pros::Motor_Group rightWheels({frontRight, backRight});
-  
-  pros::Motor_Group allWheels({frontRight, backRight, frontLeft, backLeft});
-
   pros::Motor leftFlywheel(5, 1);
 	pros::Motor rightFlywheel(6, 0);
 	pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
 
 	pros::Motor intakeFeed(13, 0);
-  pros::Motor armIntake(20, 0);
-  pros::Motor arm(11, 0);
 
 
   //Port #'s
