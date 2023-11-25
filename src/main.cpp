@@ -80,6 +80,7 @@ void autonomous() {
   int rotation;
 
   pros::Distance Distance(7);
+  pros::ADIDigitalIn elevationButton(5);
   
   allWheels.move_velocity(100);
   allWheels.brake();
@@ -109,17 +110,23 @@ void autonomous() {
   pros::delay(200);
   allWheels.brake();
   pros::delay(200);
+  
+  //turning to be parallel with the match load zone
   rightWheels.move(50);
   leftWheels.move(-50);
   waitUntil((Inert.get_heading()>=335)&&(Inert.get_heading()<=345));
   allWheels.brake();
   pros::delay(200);
-  allWheels.move(127);
+
+  //lining ourselves up with the triball along that parallel
+  allWheels.move(95);
   master.print(0, 0, "%d is the thing.", Distance.get());
   waitUntil((Distance.get() >= 190) && (Distance.get() <= 240));
   master.print(0, 0, "%d is the thing.", Distance.get());
   allWheels.brake();
   pros::delay(300);
+
+  //Turning to be perpendicular to the match load zone
   rightWheels.move(-50);
   leftWheels.move(50);
   waitUntil((Inert.get_heading()>=60)&&(Inert.get_heading()<=90));
@@ -138,7 +145,7 @@ void autonomous() {
   allWheels.brake();
 
   //picking up triball
-  arm.move(20);
+  arm.move(50);
 
   //waitUntil(intakeButton.get_value() == true); <-- make an or statement in the future
   pros::delay(2000);
@@ -155,7 +162,7 @@ void autonomous() {
 
   pros::delay(200);
 
-  //DONT TOUCH TO TOP CODE IT WORKS
+  // DON'T TOUCH TOP CODE IT WORKS
 
   rightWheels.move(50);
   leftWheels.move(-50);
@@ -169,7 +176,7 @@ void autonomous() {
   allWheels.brake();
   rightWheels.move(50);
   leftWheels.move(-50);
-  waitUntil((Inert.get_heading()>=290)&&(Inert.get_heading()<=300));
+  waitUntil((Inert.get_heading()>=310)&&(Inert.get_heading()<=320));
   allWheels.brake();
   pros::delay(100);
   allWheels.move(100);
@@ -177,7 +184,7 @@ void autonomous() {
   allWheels.brake();
   pros::delay(300);
 
-
+  // removing the triball
   pros::delay(100);
   arm.move(100);
   armIntake.move(-100);
@@ -188,8 +195,15 @@ void autonomous() {
   arm.move(-100);
   waitUntil(intakeSwitch.get_value() == true);
   arm.brake();
-  allWheels.move(100);
-  pros::delay(1000);
+
+  // moving to the elevation bar
+  rightWheels.move(50);
+  leftWheels.move(-50);
+  waitUntil((Inert.get_heading()>=280)&&(Inert.get_heading()<=290));
+  allWheels.brake();
+  pros::delay(200);
+  allWheels.move(10);
+  waitUntil(elevationButton.get_value() == true);
   allWheels.brake();
 
   } else if (autonSelecto_thingy == 2) { // far auton
