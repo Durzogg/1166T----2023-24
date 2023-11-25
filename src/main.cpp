@@ -85,7 +85,9 @@ void autonomous() {
   allWheels.move_velocity(100);
   allWheels.brake();
 
-  if(autonSelecto_thingy == 1) { //near auton
+  elevationPiston.set_value(false);
+
+  if(autonSelecto_thingy == 1) { // near auton
   
   Inert.tare();
 
@@ -119,7 +121,7 @@ void autonomous() {
   pros::delay(200);
 
   //lining ourselves up with the triball along that parallel
-  allWheels.move(95);
+  allWheels.move(95); 
   master.print(0, 0, "%d is the thing.", Distance.get());
   waitUntil((Distance.get() >= 190) && (Distance.get() <= 240));
   master.print(0, 0, "%d is the thing.", Distance.get());
@@ -164,25 +166,28 @@ void autonomous() {
 
   // DON'T TOUCH TOP CODE IT WORKS
 
+
+
+
+
+
   rightWheels.move(50);
   leftWheels.move(-50);
-  waitUntil((Inert.get_heading()>=335)&&(Inert.get_heading()<=345));
+  waitUntil((Inert.get_heading()>=340)&&(Inert.get_heading()<=350));
   allWheels.brake();
 
   //TEST FIRST BEFORE MODIFYING
 
   allWheels.move(100);
-  pros::delay(275);
+  pros::delay(500);
   allWheels.brake();
   rightWheels.move(50);
   leftWheels.move(-50);
-  waitUntil((Inert.get_heading()>=310)&&(Inert.get_heading()<=320));
-  allWheels.brake();
-  pros::delay(100);
-  allWheels.move(100);
-  pros::delay(150);
+  waitUntil((Inert.get_heading()>=305)&&(Inert.get_heading()<=315));
   allWheels.brake();
   pros::delay(300);
+
+  allWheels.move(50);
 
   // removing the triball
   pros::delay(100);
@@ -197,12 +202,8 @@ void autonomous() {
   arm.brake();
 
   // moving to the elevation bar
-  rightWheels.move(50);
-  leftWheels.move(-50);
-  waitUntil((Inert.get_heading()>=280)&&(Inert.get_heading()<=290));
-  allWheels.brake();
-  pros::delay(200);
-  allWheels.move(10);
+  // pros::delay(200);
+  // allWheels.move(30);
   waitUntil(elevationButton.get_value() == true);
   allWheels.brake();
 
@@ -253,7 +254,6 @@ void opcontrol() {
   //1,2,3,4,5,6,7,8
   //A,B,C,D,E,F,G,H
   pros::ADIDigitalOut shieldPiston(3,false);
-	pros::ADIDigitalOut elevationPiston(6,false);
 
 	pros::ADIDigitalOut rightClownPiston(2,false);
 	pros::ADIDigitalOut wrongClownPiston(1,false);

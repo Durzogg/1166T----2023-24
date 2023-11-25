@@ -20,3 +20,5 @@ pros::ADIDigitalIn intakeSwitch (8);
 pros::ADIDigitalIn intakeButton (4);
 
 pros::Imu Inert(9);
+
+pros::ADIDigitalOut elevationPiston(6,false);
