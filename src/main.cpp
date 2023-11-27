@@ -59,7 +59,7 @@ void competition_initialize() {
   } else {
     autonSelecto_thingy = 2;
   } */
-  autonSelecto_thingy = 1;
+  autonSelecto_thingy = 2;
 
 }
 
@@ -207,13 +207,24 @@ void autonomous() {
   waitUntil(elevationButton.get_value() == true);
   allWheels.brake();
 
+
+
+
+
+
+
+
   } else if (autonSelecto_thingy == 2) { // far auton
 
   Inert.tare();
 
  //driving to the goal to drop off the match
   allWheels.move(-100);
-  pros::delay(1500);
+  pros::delay(250);
+  allWheels.brake();
+  pros::delay(750);
+  allWheels.move(-100);
+  pros::delay(750);
   allWheels.brake();
   pros::delay(200);
 
@@ -222,7 +233,25 @@ void autonomous() {
   pros::delay(600);
   allWheels.brake();
   pros::delay(200);
-  // Inert.tare();
+
+ //driving to the match load zone and positioning to pick up the triball 
+  allWheels.move(100);
+  pros::delay(200);
+  allWheels.brake();
+  pros::delay(200);
+
+  // turn if we want to put the arm forward
+  rightWheels.move(50);
+  leftWheels.move(-50);
+  waitUntil((Inert.get_heading()>=95)&&(Inert.get_heading()<=105));
+  allWheels.brake();
+
+  // turn if we want the plow forward
+  rightWheels.move(-50);
+  leftWheels.move(50);
+  waitUntil((Inert.get_heading()>=275)&&(Inert.get_heading()<=285));
+  allWheels.brake();
+
   }
   
 }
