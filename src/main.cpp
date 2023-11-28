@@ -28,6 +28,8 @@ void initialize() {
 	pros::lcd::set_text(1, "Hello PROS User!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
+
+
 }
 
 /**
@@ -36,7 +38,7 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-	
+  
 }
 
 /**
@@ -52,6 +54,8 @@ void competition_initialize() {
 
   pros::ADIDigitalIn AutonSelect (6);
   Inert.reset();
+
+
   //1 is near, 2 is far
 
   /* if (AutonSelect.get_value()<2400){
@@ -85,7 +89,7 @@ void autonomous() {
   allWheels.move_velocity(100);
   allWheels.brake();
 
-  elevationPiston.set_value(false);
+
 
   if(autonSelecto_thingy == 1) { // near auton
   
@@ -202,8 +206,6 @@ void autonomous() {
   arm.brake();
 
   // moving to the elevation bar
-  // pros::delay(200);
-  // allWheels.move(30);
   waitUntil(elevationButton.get_value() == true);
   allWheels.brake();
 
@@ -220,13 +222,15 @@ void autonomous() {
 
  //driving to the goal to drop off the match
   allWheels.move(-100);
-  pros::delay(250);
-  allWheels.brake();
-  pros::delay(750);
-  allWheels.move(-100);
-  pros::delay(750);
+  pros::delay(200);
   allWheels.brake();
   pros::delay(200);
+
+  // rightWheels.move(50);
+  // leftWheels.move(-50);
+  // waitUntil((Inert.get_heading()>=95)&&(Inert.get_heading()<=105));
+  // allWheels.brake();
+/*
 
  //making ourselves flat against the goal 
   rightWheels.move(-100);
@@ -251,7 +255,7 @@ void autonomous() {
   leftWheels.move(50);
   waitUntil((Inert.get_heading()>=275)&&(Inert.get_heading()<=285));
   allWheels.brake();
-
+*/
   }
   
 }
@@ -282,10 +286,13 @@ void opcontrol() {
   //Port #'s
   //1,2,3,4,5,6,7,8
   //A,B,C,D,E,F,G,H
-  pros::ADIDigitalOut shieldPiston(3,false);
+  pros::ADIDigitalOut shieldPiston(3);
+  pros::ADIDigitalOut elevationPiston(7);
 
 	pros::ADIDigitalOut rightClownPiston(2,false);
 	pros::ADIDigitalOut wrongClownPiston(1,false);
+
+  int testaeai0jfoijfewahu99 = 0;
 
   int elevation = 1;
   int plow = 1;
@@ -299,8 +306,8 @@ void opcontrol() {
   int minDeg;
   int maxDeg;
 
-  elevationPiston.set_value(false);
   allWheels.move_velocity(100);
+
   while (1==1) {
 
 
