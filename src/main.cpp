@@ -222,47 +222,58 @@ void autonomous() {
 
   Inert.tare();
 
- //driving to the goal to drop off the match
+  // move to the center of the field
   allWheels.move(55);
   waitUntil((Distance.get() >= 1050) && (Distance.get() <= 1100));
   allWheels.brake();
   pros::delay(200);
 
+  // back up a little bit
   allWheels.move(-50);
   waitUntil((Distance.get() >= 950) && (Distance.get() <= 1000));
   allWheels.brake();
 
+  // turn to the middle bar, at an angle
   rightWheels.move(50);
   leftWheels.move(-50);
   waitUntil((Inert.get_heading()>=325)&&(Inert.get_heading()<=335));
   allWheels.brake();
   pros::delay(100);
 
+  // move to the middle bar, at an angle
   allWheels.move(100);
-  pros::delay(500);
+  pros::delay(600);
   allWheels.brake();
   pros::delay(100);
 
+  // turn toward the goal
   rightWheels.move(50);
   leftWheels.move(-50);
   waitUntil((Inert.get_heading()>=285)&&(Inert.get_heading()<=295));
   allWheels.brake();
   pros::delay(100);
 
+  // activate the piston
   rightClownPiston.set_value(true);
-  pros::delay(150);
+  pros::delay(100);
 
+  // push the triballs to the goal
   allWheels.move(-100);
   pros::delay(750);
   allWheels.brake();
   pros::delay(200);
 
-  rightClownPiston.set_value(false);
-
-  allWheels.move(100);
+  // move a little more toward the goal for alignment
+  allWheels.move(-100);
   pros::delay(200);
   allWheels.brake();
+  pros::delay(100);
 
+  // deactivate the piston
+  rightClownPiston.set_value(false);
+  pros::delay(100);
+
+  // turn to inertial heading 240
 
 
   

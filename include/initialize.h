@@ -20,3 +20,6 @@ pros::ADIDigitalIn intakeSwitch (8);
 pros::ADIDigitalIn intakeButton (4);
 
 pros::Imu Inert(9);
+
+pros::ADIDigitalOut rightClownPiston(2,false);
+pros::ADIDigitalOut wrongClownPiston(1,false);
