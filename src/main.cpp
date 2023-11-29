@@ -217,7 +217,7 @@ void autonomous() {
 
 
 
-
+/*
 // far auton
 
   Inert.tare();
@@ -263,9 +263,22 @@ void autonomous() {
   pros::delay(200);
   allWheels.brake();
 
+*/
+
+  //Skills Auton
+
+  Inert.tare();
+  pros::delay(200);
+  leftWheels.move(50);
+  waitUntil((Inert.get_heading()>20)&&(Inert.get_heading()<25));
+  allWheels.brake();
+  arm.move(100);
+  waitUntil(intakeButton.get_value()==true);
+  flywheelMotors.move(60);
+  pros::delay(35000);
+  flywheelMotors.brake();
 
 
-  
 }
 
 /**
@@ -283,10 +296,6 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-
-  pros::Motor leftFlywheel(5, 1);
-	pros::Motor rightFlywheel(6, 0);
-	pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
 
 	pros::Motor intakeFeed(13, 0);
 
