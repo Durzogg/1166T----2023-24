@@ -38,7 +38,8 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-  
+  pros::ADIDigitalOut rightClownPiston(2,false);
+  rightClownPiston.set_value(false);
 }
 
 /**
@@ -63,7 +64,6 @@ void competition_initialize() {
   } else {
     autonSelecto_thingy = 2;
   } */
-  autonSelecto_thingy = 2;
 
 }
 
@@ -85,13 +85,16 @@ void autonomous() {
 
   pros::Distance Distance(7);
   pros::ADIDigitalIn elevationButton(5);
+
+  pros::ADIDigitalOut rightClownPiston(2,false);
+  pros::ADIDigitalOut wrongClownPiston(1,false);
   
   allWheels.move_velocity(100);
   allWheels.brake();
 
 
-
-  if(autonSelecto_thingy == 1) { // near auton
+/*
+  // near auton
   
   Inert.tare();
 
@@ -126,9 +129,7 @@ void autonomous() {
 
   //lining ourselves up with the triball along that parallel
   allWheels.move(95); 
-  master.print(0, 0, "%d is the thing.", Distance.get());
   waitUntil((Distance.get() >= 190) && (Distance.get() <= 240));
-  master.print(0, 0, "%d is the thing.", Distance.get());
   allWheels.brake();
   pros::delay(300);
 
@@ -173,8 +174,6 @@ void autonomous() {
 
 
 
-
-
   rightWheels.move(50);
   leftWheels.move(-50);
   waitUntil((Inert.get_heading()>=340)&&(Inert.get_heading()<=350));
@@ -208,6 +207,7 @@ void autonomous() {
   // moving to the elevation bar
   waitUntil(elevationButton.get_value() == true);
   allWheels.brake();
+*/
 
 
 
@@ -216,47 +216,55 @@ void autonomous() {
 
 
 
-  } else if (autonSelecto_thingy == 2) { // far auton
+
+
+// far auton
 
   Inert.tare();
 
  //driving to the goal to drop off the match
+  allWheels.move(55);
+  waitUntil((Distance.get() >= 1050) && (Distance.get() <= 1100));
+  allWheels.brake();
+  pros::delay(200);
+
+  allWheels.move(-50);
+  waitUntil((Distance.get() >= 950) && (Distance.get() <= 1000));
+  allWheels.brake();
+
+  rightWheels.move(50);
+  leftWheels.move(-50);
+  waitUntil((Inert.get_heading()>=325)&&(Inert.get_heading()<=335));
+  allWheels.brake();
+  pros::delay(100);
+
+  allWheels.move(100);
+  pros::delay(500);
+  allWheels.brake();
+  pros::delay(100);
+
+  rightWheels.move(50);
+  leftWheels.move(-50);
+  waitUntil((Inert.get_heading()>=285)&&(Inert.get_heading()<=295));
+  allWheels.brake();
+  pros::delay(100);
+
+  rightClownPiston.set_value(true);
+  pros::delay(150);
+
   allWheels.move(-100);
-  pros::delay(200);
+  pros::delay(750);
   allWheels.brake();
   pros::delay(200);
 
-  // rightWheels.move(50);
-  // leftWheels.move(-50);
-  // waitUntil((Inert.get_heading()>=95)&&(Inert.get_heading()<=105));
-  // allWheels.brake();
-/*
+  rightClownPiston.set_value(false);
 
- //making ourselves flat against the goal 
-  rightWheels.move(-100);
-  pros::delay(600);
-  allWheels.brake();
-  pros::delay(200);
-
- //driving to the match load zone and positioning to pick up the triball 
   allWheels.move(100);
   pros::delay(200);
   allWheels.brake();
-  pros::delay(200);
 
-  // turn if we want to put the arm forward
-  rightWheels.move(50);
-  leftWheels.move(-50);
-  waitUntil((Inert.get_heading()>=95)&&(Inert.get_heading()<=105));
-  allWheels.brake();
 
-  // turn if we want the plow forward
-  rightWheels.move(-50);
-  leftWheels.move(50);
-  waitUntil((Inert.get_heading()>=275)&&(Inert.get_heading()<=285));
-  allWheels.brake();
-*/
-  }
+
   
 }
 
@@ -282,6 +290,8 @@ void opcontrol() {
 
 	pros::Motor intakeFeed(13, 0);
 
+  pros::ADIDigitalOut rightClownPiston(2,false);
+  pros::ADIDigitalOut wrongClownPiston(1,false);
 
   //Port #'s
   //1,2,3,4,5,6,7,8
@@ -289,14 +299,12 @@ void opcontrol() {
   pros::ADIDigitalOut shieldPiston(3);
   pros::ADIDigitalOut elevationPiston(7);
 
-	pros::ADIDigitalOut rightClownPiston(2,false);
-	pros::ADIDigitalOut wrongClownPiston(1,false);
 
   int testaeai0jfoijfewahu99 = 0;
 
   int elevation = 1;
   int plow = 1;
-  bool flyWheelOn = false;
+  bool flywheelOn = false;
   int intakeOff = 1;
   int drvtrDZ;
   int armDZ;
@@ -346,23 +354,28 @@ void opcontrol() {
   // Flywheel Code -- [Working | Final Keybinds]
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_X) == true)) {
       flywheelMotors.move_velocity(100);
-      flyWheelOn = true;
+      flywheelOn = true;
     }
 
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == true)) {
       flywheelMotors.move_velocity(75);
-      flyWheelOn = true;
+      flywheelOn = true;
+    }
+
+    if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_B) == true)) {
+      flywheelMotors.move_velocity(60);
+      flywheelOn = true;
     }
 
     if ((master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN) == true)) {
-      flyWheelOn = false;
+      flywheelOn = false;
     }
 
-    if (flyWheelOn == true) {
+    if (flywheelOn == true) {
        flywheelMotors.move(127);
     }
 
-    if (flyWheelOn == false) {
+    if (flywheelOn == false) {
       flywheelMotors.brake();
     }
 
