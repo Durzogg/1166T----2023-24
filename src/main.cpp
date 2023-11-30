@@ -279,7 +279,7 @@ void autonomous() {
   allWheels.brake();
   pros::delay(100);
 
-*/
+
   // turn toward the elevation pole
   rightWheels.move(50);
   leftWheels.move(-50);
@@ -287,7 +287,6 @@ void autonomous() {
   allWheels.brake();
   pros::delay(100);
 
-  //Skills Auton
   // move to the elevation pole
   allWheels.move(100);
   pros::delay(600);
@@ -298,8 +297,9 @@ void autonomous() {
   arm.move(50);
   pros::delay(600);
   arm.brake();
+*/
 
-  */
+  //Skills Auton
   
   Inert.tare();
   pros::delay(200);
