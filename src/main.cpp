@@ -309,9 +309,19 @@ void autonomous() {
   arm.move(100);
   waitUntil(intakeButton.get_value()==true);
   flywheelMotors.move(60);
-  pros::delay(35000);
+  pros::delay(100);
   flywheelMotors.brake();
-
+  arm.move(-50); 
+  rightWheels.move(50);
+  waitUntil(Inert.get_heading()>43);
+  arm.brake();
+  allWheels.brake();
+  allWheels.move(-100);
+  pros::delay(1000);
+  leftWheels.move(50);
+  rightWheels.move(-50);
+  waitUntil((Inert.get_heading()>177)&&(Inert.get_heading()<183));
+  allWheels.brake();
 
 }
 
