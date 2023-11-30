@@ -93,7 +93,7 @@ void autonomous() {
   allWheels.brake();
 
 
-/*
+
   // near auton
   
   Inert.tare();
@@ -148,7 +148,7 @@ void autonomous() {
   armIntake.move(100);
   pros::delay(450);
   allWheels.move(-45);
-  pros::delay(300);
+  pros::delay(250);
   allWheels.brake();
 
   //picking up triball
@@ -186,7 +186,7 @@ void autonomous() {
   allWheels.brake();
   rightWheels.move(50);
   leftWheels.move(-50);
-  waitUntil((Inert.get_heading()>=305)&&(Inert.get_heading()<=315));
+  waitUntil((Inert.get_heading()>=293)&&(Inert.get_heading()<=298));
   allWheels.brake();
   pros::delay(300);
 
@@ -207,7 +207,6 @@ void autonomous() {
   // moving to the elevation bar
   waitUntil(elevationButton.get_value() == true);
   allWheels.brake();
-*/
 
 
 
@@ -215,7 +214,7 @@ void autonomous() {
 
 
 
-
+/*
 
 
 // far auton
@@ -273,9 +272,31 @@ void autonomous() {
   rightClownPiston.set_value(false);
   pros::delay(100);
 
-  // turn to inertial heading 240
+  // back up a little bit
+  allWheels.move(100);
+  pros::delay(150);
+  allWheels.brake();
+  pros::delay(100);
 
+  // turn toward the elevation pole
+  rightWheels.move(50);
+  leftWheels.move(-50);
+  waitUntil((Inert.get_heading()>=230)&&(Inert.get_heading()<=240));
+  allWheels.brake();
+  pros::delay(100);
 
+  // move to the elevation pole
+  allWheels.move(100);
+  pros::delay(600);
+  allWheels.brake();
+  pros::delay(100);
+
+  // move the arm into the elevation pole
+  arm.move(50);
+  pros::delay(600);
+  arm.brake();
+
+  */
   
 }
 
