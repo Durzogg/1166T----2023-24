@@ -19,6 +19,11 @@ pros::Motor armIntake(20, 0);
 pros::ADIDigitalIn intakeSwitch (8);
 pros::ADIDigitalIn intakeButton (4);
 
+pros::Motor leftFlywheel(5, 1);
+pros::Motor rightFlywheel(6, 0);
+pros::Motor_Group flywheelMotors({leftFlywheel, rightFlywheel});
+
+
 pros::Imu Inert(9);
 
 pros::ADIDigitalOut rightClownPiston(2,false);
