@@ -309,9 +309,10 @@
       }
     },
     "upload_options": {
-      "icon": "X",
+      "icon": "power",
       "description": "Run during anyside during the normal matches. Skills code will be in a seperate file",
-      "after": "none"
+      "after": "run",
+      "slot": 3
     }
   }
 }

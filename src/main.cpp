@@ -92,11 +92,13 @@ void autonomous() {
   allWheels.move_velocity(100);
   allWheels.brake();
 
-
+/*
 
   // near auton
   
   Inert.tare();
+  
+  allWheels.set_brake_modes(MOTOR_BRAKE_COAST);
 
  //driving to the goal to drop off the match
   allWheels.move(-100);
@@ -179,7 +181,7 @@ void autonomous() {
   waitUntil((Inert.get_heading()>=340)&&(Inert.get_heading()<=350));
   allWheels.brake();
 
-  //TEST FIRST BEFORE MODIFYING
+
 
   allWheels.move(100);
   pros::delay(500);
@@ -221,7 +223,9 @@ void autonomous() {
 // far auton
 
   Inert.tare();
-
+  
+    allWheels.set_brake_modes(MOTOR_BRAKE_COAST);
+  
   // move to the center of the field
   allWheels.move(55);
   waitUntil((Distance.get() >= 1050) && (Distance.get() <= 1100));
@@ -300,7 +304,8 @@ void autonomous() {
 */
 
   //Skills Auton
-  
+
+  allWheels.set_brake_modes(MOTOR_BRAKE_HOLD);
   Inert.tare();
   pros::delay(200);
   leftWheels.move(50);
@@ -309,18 +314,19 @@ void autonomous() {
   arm.move(100);
   waitUntil(intakeButton.get_value()==true);
   flywheelMotors.move(60);
-  pros::delay(100);
+  pros::delay(1000);
   flywheelMotors.brake();
-  arm.move(-50); 
-  rightWheels.move(50);
+  arm.move(-100); 
+  rightWheels.move(-50);
   waitUntil(Inert.get_heading()>43);
-  arm.brake();
   allWheels.brake();
+  waitUntil(intakeSwitch.get_value()==true);
+  arm.brake();
   allWheels.move(-100);
   pros::delay(1000);
   leftWheels.move(50);
   rightWheels.move(-50);
-  waitUntil((Inert.get_heading()>177)&&(Inert.get_heading()<183));
+  waitUntil((Inert.get_heading()>65)&&(Inert.get_heading()<90));
   allWheels.brake();
 
 }
@@ -351,7 +357,7 @@ void opcontrol() {
   //A,B,C,D,E,F,G,H
   pros::ADIDigitalOut shieldPiston(3);
   pros::ADIDigitalOut elevationPiston(7);
-
+  allWheels.set_brake_modes(MOTOR_BRAKE_COAST);
 
   int testaeai0jfoijfewahu99 = 0;
 
