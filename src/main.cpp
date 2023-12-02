@@ -125,13 +125,13 @@ void autonomous() {
   //turning to be parallel with the match load zone
   rightWheels.move(50);
   leftWheels.move(-50);
-  waitUntil((Inert.get_heading()>=335)&&(Inert.get_heading()<=345));
+  waitUntil((Inert.get_heading()>=350)&&(Inert.get_heading()<=360));
   allWheels.brake();
   pros::delay(200);
 
   //lining ourselves up with the triball along that parallel
   allWheels.move(95); 
-  waitUntil((Distance.get() >= 190) && (Distance.get() <= 240));
+  waitUntil((Distance.get() >= 180) && (Distance.get() <= 230));
   allWheels.brake();
   pros::delay(300);
 
@@ -149,8 +149,8 @@ void autonomous() {
   allWheels.move(75);
   armIntake.move(100);
   pros::delay(450);
-  allWheels.move(-45);
-  pros::delay(250);
+  allWheels.move(-50);
+  pros::delay(200);
   allWheels.brake();
 
   //picking up triball
@@ -178,7 +178,7 @@ void autonomous() {
 
   rightWheels.move(50);
   leftWheels.move(-50);
-  waitUntil((Inert.get_heading()>=340)&&(Inert.get_heading()<=350));
+  waitUntil((Inert.get_heading()>=345)&&(Inert.get_heading()<=355));
   allWheels.brake();
 
 
@@ -188,7 +188,7 @@ void autonomous() {
   allWheels.brake();
   rightWheels.move(50);
   leftWheels.move(-50);
-  waitUntil((Inert.get_heading()>=293)&&(Inert.get_heading()<=298));
+  waitUntil((Inert.get_heading()>=295)&&(Inert.get_heading()<=305));
   allWheels.brake();
   pros::delay(300);
 
@@ -210,16 +210,16 @@ void autonomous() {
   waitUntil(elevationButton.get_value() == true);
   allWheels.brake();
 
+*/
 
 
 
 
 
 
-/*
 
 
-/*
+
 // far auton
 
   Inert.tare();
@@ -287,7 +287,7 @@ void autonomous() {
   // turn toward the elevation pole
   rightWheels.move(50);
   leftWheels.move(-50);
-  waitUntil((Inert.get_heading()>=230)&&(Inert.get_heading()<=240));
+  waitUntil((Inert.get_heading()>=210)&&(Inert.get_heading()<=220));
   allWheels.brake();
   pros::delay(100);
 
@@ -301,8 +301,9 @@ void autonomous() {
   arm.move(50);
   pros::delay(600);
   arm.brake();
-*/
 
+
+/*
   //Skills Auton
 
   allWheels.set_brake_modes(MOTOR_BRAKE_HOLD);
@@ -328,7 +329,7 @@ void autonomous() {
   rightWheels.move(-50);
   waitUntil((Inert.get_heading()>65)&&(Inert.get_heading()<90));
   allWheels.brake();
-
+*/
 }
 
 /**

@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "1166T - Match Code",
+    "project_name": "1166T - Far Autonomous Code",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -310,9 +310,9 @@
     },
     "upload_options": {
       "icon": "power",
-      "description": "Run during anyside during the normal matches. Skills code will be in a seperate file",
+      "description": "Run during matches if doing far autonomous.",
       "after": "run",
-      "slot": 3
+      "slot": 2
     }
   }
 }
