@@ -92,7 +92,7 @@ void autonomous() {
   allWheels.move_velocity(100);
   allWheels.brake();
 
-/*
+
 
   // near auton
   
@@ -131,7 +131,7 @@ void autonomous() {
 
   //lining ourselves up with the triball along that parallel
   allWheels.move(95); 
-  waitUntil((Distance.get() >= 180) && (Distance.get() <= 230));
+  waitUntil((Distance.get()>=210));
   allWheels.brake();
   pros::delay(300);
 
@@ -139,7 +139,6 @@ void autonomous() {
   rightWheels.move(-50);
   leftWheels.move(50);
   waitUntil((Inert.get_heading()>=60)&&(Inert.get_heading()<=90));
-
   allWheels.move(50);
   pros::delay(125);
   allWheels.brake();
@@ -147,17 +146,17 @@ void autonomous() {
   //driving in to get the triball
   pros::delay(100);
   allWheels.move(75);
-  armIntake.move(100);
+  armIntake.move(75);
   pros::delay(450);
   allWheels.move(-50);
   pros::delay(200);
   allWheels.brake();
 
   //picking up triball
-  arm.move(50);
+  arm.move(35);
 
   //waitUntil(intakeButton.get_value() == true); <-- make an or statement in the future
-  pros::delay(2000);
+  pros::delay(3000);
 
 
   // achieved triball from zone and picking it up
@@ -186,9 +185,11 @@ void autonomous() {
   allWheels.move(100);
   pros::delay(500);
   allWheels.brake();
+  allWheels.set_brake_modes(MOTOR_BRAKE_HOLD);
   rightWheels.move(50);
   leftWheels.move(-50);
   waitUntil((Inert.get_heading()>=295)&&(Inert.get_heading()<=305));
+  allWheels.set_brake_modes(MOTOR_BRAKE_HOLD);
   allWheels.brake();
   pros::delay(300);
 
@@ -210,16 +211,13 @@ void autonomous() {
   waitUntil(elevationButton.get_value() == true);
   allWheels.brake();
 
-*/
 
 
 
 
 
 
-
-
-
+/*
 // far auton
 
   Inert.tare();
@@ -302,6 +300,15 @@ void autonomous() {
   pros::delay(600);
   arm.brake();
 
+*/
+
+
+
+
+
+
+
+
 
 /*
   //Skills Auton
@@ -315,20 +322,8 @@ void autonomous() {
   arm.move(100);
   waitUntil(intakeButton.get_value()==true);
   flywheelMotors.move(60);
-  pros::delay(1000);
+  pros::delay(60000);
   flywheelMotors.brake();
-  arm.move(-100); 
-  rightWheels.move(-50);
-  waitUntil(Inert.get_heading()>43);
-  allWheels.brake();
-  waitUntil(intakeSwitch.get_value()==true);
-  arm.brake();
-  allWheels.move(-100);
-  pros::delay(1000);
-  leftWheels.move(50);
-  rightWheels.move(-50);
-  waitUntil((Inert.get_heading()>65)&&(Inert.get_heading()<90));
-  allWheels.brake();
 */
 }
 
@@ -373,9 +368,9 @@ void opcontrol() {
   int drvtrLR;
   int minDeg;
   int maxDeg;
-
+  arm.set_brake_mode(MOTOR_BRAKE_COAST);
   allWheels.move_velocity(100);
-
+  allWheels.set_brake_modes(MOTOR_BRAKE_COAST);
   while (1==1) {
 
 
@@ -517,6 +512,8 @@ void opcontrol() {
     }
 
     if (partner.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == true) {
+
+      arm.set_brake_mode(MOTOR_BRAKE_HOLD);
 
       if(elevation == 1) {
         elevationPiston.set_value(true);

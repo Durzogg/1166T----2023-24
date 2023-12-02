@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "1166T - Far Autonomous Code",
+    "project_name": "1166T - Near Autonomous Code",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -309,10 +309,10 @@
       }
     },
     "upload_options": {
-      "icon": "power",
+      "icon": "X",
       "description": "Run during matches if doing far autonomous.",
-      "after": "run",
-      "slot": 2
+      "after": "none",
+      "slot": 1
     }
   }
 }
